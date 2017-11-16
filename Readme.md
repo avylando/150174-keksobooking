@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Анатолий Долгов](https://up.htmlacademy.ru/javascript/11/user/150174).
-* Наставник: `Неизвестно`.
+* Наставник: [Мартин Шульц].
 
 ---
 
