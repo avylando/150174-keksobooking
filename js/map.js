@@ -86,7 +86,7 @@ var generateCard = function () {
   var addFeatureItem = function (array) {
     var FEATURES_LIST_ELEMENTS = [];
 
-    for (var i = 0; i < array.length; j++) {
+    for (var i = 0; i < array.length; i++) {
       FEATURES_LIST_ELEMENTS[i] = '<li></li>';
     }
 
