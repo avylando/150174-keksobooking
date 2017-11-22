@@ -26,12 +26,27 @@ var getRandomValue = function (array) {
   return array[Math.floor(Math.random() * array.length)];
 };
 
+var getUniqueValues = function (array) {
+  var obj = {};
+  var OUTPUT = [];
+  var j = 0;
+
+  for (var i = 0; i < array.length; i++) {
+    var item = array[i];
+    if (obj[item] !== 1) {
+      obj[item] = 1;
+      OUTPUT[j++] = item;
+    }
+  }
+
+  return OUTPUT;
+};
+
 
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 
 var tokyoPinMap = document.querySelector('.map__pins');
-
 var template = document.querySelector('template').content;
 
 // Generate Pin from template
@@ -91,7 +106,7 @@ var generateCard = function () {
 
   cardElement.querySelector('h3').textContent = offer.title;
   cardElement.querySelector('p small').textContent = offer.adress;
-  cardElement.querySelector('.popup__price').textContent = offer.price + '&#x20bd;/ночь';
+  cardElement.querySelector('.popup__price').innerHTML = offer.price + '&#x20bd;/ночь';
   cardElement.querySelector('h4').textContent = getHouseType(offer.type);
   cardElement.querySelector('h4 + p').textContent = offer.rooms + ' комнаты для ' + offer.guests + ' гостей';
   cardElement.querySelector('h4 + p + p').textContent = 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout;
@@ -117,9 +132,14 @@ for (var i = 0; i < adsNumber; i++) {
     avatar: 'img/avatars/user0' + (i + 1) + '.png'
   };
 
+  var houseLocation = {
+    x: getValueInRange(minX, maxX),
+    y: getValueInRange(minY, maxY)
+  };
+
   var offer = {
     title: TITLES[i],
-    adress: '{{location.x}}, {{location.y}}',
+    adress: '' + houseLocation.x + ', ' + houseLocation.y,
     price: getValueInRange(minPrice, maxPrice),
     type: getRandomValue(TYPES),
     rooms: getValueInRange(minRoomsNumber, maxRoomsNumber),
@@ -131,25 +151,13 @@ for (var i = 0; i < adsNumber; i++) {
     photos: []
   };
 
-  // var cache = '';
   var randomFeaturesLength = Math.round(Math.random() * FEATURES.length);
-
-  // console.log(randomFeaturesLength);
 
   for (var j = 0; j < randomFeaturesLength; j++) {
     offer.features[j] = getRandomValue(FEATURES);
-
-    // for (var k = 0; k < offer.features.length; k++) {
-    //   if (cache !== offer.features[j]) {
-    //   offer.features[j] = cache;
-    //   }
-    // }
   }
 
-  var houseLocation = {
-    x: getValueInRange(minX, maxX),
-    y: getValueInRange(minY, maxY)
-  };
+  offer.features = getUniqueValues(offer.features);
 
   AD_PARAMETERS = [author, offer, houseLocation];
 
@@ -159,6 +167,5 @@ for (var i = 0; i < adsNumber; i++) {
   fragmentCards.appendChild(generateCard(ADS));
 }
 
-// console.log(fragmentCards);
 tokyoPinMap.appendChild(fragmentPins);
 map.appendChild(fragmentCards);
