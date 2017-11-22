@@ -78,17 +78,20 @@ var generateCard = function () {
       return 'Бунгало';
     } else if (value === 'house') {
       return 'Дом';
+    } else {
+      return 'Неизвестно';
     }
   };
 
   var addFeatureItem = function (array) {
     var FEATURES_LIST_ELEMENTS = [];
 
-    for (var j = 0; j < array.length; j++) {
-      FEATURES_LIST_ELEMENTS[j] = '<li></li>';
+    for (var i = 0; i < array.length; j++) {
+      FEATURES_LIST_ELEMENTS[i] = '<li></li>';
     }
 
     var featuresList = FEATURES_LIST_ELEMENTS.join(' ');
+
     return featuresList;
   };
 
