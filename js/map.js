@@ -71,42 +71,6 @@ var mapCard = template.querySelector('.map__card');
 var generateCard = function () {
   var cardElement = mapCard.cloneNode(true);
 
-  var getHouseType = function (value) {
-    if (value === 'flat') {
-      return 'Квартира';
-    } else if (value === 'bungalo') {
-      return 'Бунгало';
-    } else if (value === 'house') {
-      return 'Дом';
-    } else {
-      return 'Неизвестно';
-    }
-  };
-
-  var addFeatureItem = function (array) {
-    var FEATURES_LIST_ELEMENTS = [];
-
-    for (var i = 0; i < array.length; i++) {
-      FEATURES_LIST_ELEMENTS[i] = '<li></li>';
-    }
-
-    var featuresList = FEATURES_LIST_ELEMENTS.join(' ');
-
-    return featuresList;
-  };
-
-  var addItemClasses = function (array) {
-
-    var FEATURE_ITEMS = cardElement.querySelectorAll('.popup__features > li');
-
-    for (var i = 0; i < array.length; i++) {
-      FEATURE_ITEMS[i].classList.add('feature');
-      FEATURE_ITEMS[i].classList.add('feature--' + array[i]);
-    }
-
-    return FEATURE_ITEMS;
-  };
-
   cardElement.querySelector('h3').textContent = offer.title;
   cardElement.querySelector('p small').textContent = offer.adress;
   cardElement.querySelector('.popup__price').innerHTML = offer.price + '&#x20bd;/ночь';
@@ -114,13 +78,49 @@ var generateCard = function () {
   cardElement.querySelector('h4 + p').textContent = offer.rooms + ' комнаты для ' + offer.guests + ' гостей';
   cardElement.querySelector('h4 + p + p').textContent = 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout;
   cardElement.querySelector('.popup__features').innerHTML = addFeatureItem(offer.features);
-  cardElement.querySelectorAll('.popup__features > li').textContent = addItemClasses(offer.features);
+  cardElement.querySelectorAll('.popup__features > li').textContent = addItemClasses(cardElement, offer.features);
   cardElement.querySelector('.popup__features + p').textContent = offer.description;
   cardElement.querySelector('.popup__avatar').src = author.avatar;
   cardElement.style.left = (houseLocation.x - pinWidth) + 'px';
   cardElement.style.top = (houseLocation.y - pinHeight) + 'px';
 
   return cardElement;
+};
+
+var getHouseType = function (value) {
+  if (value === 'flat') {
+    return 'Квартира';
+  } else if (value === 'bungalo') {
+    return 'Бунгало';
+  } else if (value === 'house') {
+    return 'Дом';
+  } else {
+    return 'Неизвестно';
+  }
+};
+
+var addFeatureItem = function (array) {
+  var FEATURES_LIST_ELEMENTS = [];
+
+  for (var i = 0; i < array.length; i++) {
+    FEATURES_LIST_ELEMENTS[i] = '<li></li>';
+  }
+
+  var featuresList = FEATURES_LIST_ELEMENTS.join(' ');
+
+  return featuresList;
+};
+
+var addItemClasses = function (element, array) {
+
+  var FEATURE_ITEMS = element.querySelectorAll('.popup__features > li');
+
+  for (var i = 0; i < array.length; i++) {
+    FEATURE_ITEMS[i].classList.add('feature');
+    FEATURE_ITEMS[i].classList.add('feature--' + array[i]);
+  }
+
+  return FEATURE_ITEMS;
 };
 
 // Create fragments
@@ -130,15 +130,24 @@ var fragmentCards = document.createDocumentFragment();
 
 // Generate objects
 
-for (var i = 0; i < adsNumber; i++) {
+var generateAuthor = function () {
   var author = {
     avatar: 'img/avatars/user0' + (i + 1) + '.png'
   };
 
+  return author;
+}
+
+var generateHouseLocation = function () {
   var houseLocation = {
     x: getValueInRange(minX, maxX),
     y: getValueInRange(minY, maxY)
   };
+
+  return houseLocation;
+}
+
+var generateOffer = function () {
 
   var offer = {
     title: TITLES[i],
@@ -154,13 +163,28 @@ for (var i = 0; i < adsNumber; i++) {
     photos: []
   };
 
+  return offer;
+}
+
+var getRandomFeatures = function () {
   var randomFeaturesLength = Math.round(Math.random() * FEATURES.length);
 
   for (var j = 0; j < randomFeaturesLength; j++) {
     offer.features[j] = getRandomValue(FEATURES);
   }
 
-  offer.features = getUniqueValues(offer.features);
+  return offer.features = getUniqueValues(offer.features);
+}
+
+for (var i = 0; i < adsNumber; i++) {
+
+  generateAuthor();
+
+  generateHouseLocation();
+
+  generateOffer();
+
+  getRandomFeatures();
 
   AD_PARAMETERS = [author, offer, houseLocation];
 
@@ -169,6 +193,8 @@ for (var i = 0; i < adsNumber; i++) {
   fragmentPins.appendChild(generatePin(ADS));
   fragmentCards.appendChild(generateCard(ADS));
 }
+
+
 
 tokyoPinMap.appendChild(fragmentPins);
 map.appendChild(fragmentCards);
