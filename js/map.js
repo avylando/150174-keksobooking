@@ -28,18 +28,18 @@ var getRandomValue = function (array) {
 
 var getUniqueValues = function (array) {
   var obj = {};
-  var OUTPUT = [];
+  var output = [];
   var j = 0;
 
   for (var i = 0; i < array.length; i++) {
     var item = array[i];
     if (obj[item] !== 1) {
       obj[item] = 1;
-      OUTPUT[j++] = item;
+      output[j++] = item;
     }
   }
 
-  return OUTPUT;
+  return output;
 };
 
 
@@ -123,33 +123,28 @@ var addItemClasses = function (element, array) {
   return FEATURE_ITEMS;
 };
 
-// Create fragments
-
-var fragmentPins = document.createDocumentFragment();
-var fragmentCards = document.createDocumentFragment();
-
-// Generate objects
+// Generate Ad parameters
 
 var generateAuthor = function () {
-  var author = {
+  author = {
     avatar: 'img/avatars/user0' + (i + 1) + '.png'
   };
 
   return author;
-}
+};
 
 var generateHouseLocation = function () {
-  var houseLocation = {
+  houseLocation = {
     x: getValueInRange(minX, maxX),
     y: getValueInRange(minY, maxY)
   };
 
   return houseLocation;
-}
+};
 
 var generateOffer = function () {
 
-  var offer = {
+  offer = {
     title: TITLES[i],
     adress: '' + houseLocation.x + ', ' + houseLocation.y,
     price: getValueInRange(minPrice, maxPrice),
@@ -164,7 +159,7 @@ var generateOffer = function () {
   };
 
   return offer;
-}
+};
 
 var getRandomFeatures = function () {
   var randomFeaturesLength = Math.round(Math.random() * FEATURES.length);
@@ -173,28 +168,36 @@ var getRandomFeatures = function () {
     offer.features[j] = getRandomValue(FEATURES);
   }
 
-  return offer.features = getUniqueValues(offer.features);
-}
+  offer.features = getUniqueValues(offer.features);
+
+  return offer.features;
+};
+
+// Create fragments
+
+var fragmentPins = document.createDocumentFragment();
+var fragmentCards = document.createDocumentFragment();
+
+// Create ADS array and append to fragments
 
 for (var i = 0; i < adsNumber; i++) {
 
-  generateAuthor();
+  var author = generateAuthor();
 
-  generateHouseLocation();
+  var houseLocation = generateHouseLocation();
 
-  generateOffer();
+  var offer = generateOffer();
 
-  getRandomFeatures();
+  offer.features = getRandomFeatures();
 
   AD_PARAMETERS = [author, offer, houseLocation];
-
   ADS[i] = AD_PARAMETERS;
 
-  fragmentPins.appendChild(generatePin(ADS));
-  fragmentCards.appendChild(generateCard(ADS));
+  fragmentPins.appendChild(generatePin(ADS[i]));
+  fragmentCards.appendChild(generateCard(ADS[i]));
 }
 
-
+// Add fragments to map
 
 tokyoPinMap.appendChild(fragmentPins);
 map.appendChild(fragmentCards);
