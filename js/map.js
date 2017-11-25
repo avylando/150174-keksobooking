@@ -19,7 +19,7 @@ var maxY = 500;
 // Useful functions
 
 var getValueInRange = function (min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
+  return Math.round(Math.random() * (max - min) + min);
 };
 
 var getRandomValue = function (array) {
@@ -193,8 +193,8 @@ for (var i = 0; i < adsNumber; i++) {
   AD_PARAMETERS = [author, offer, houseLocation];
   ADS[i] = AD_PARAMETERS;
 
-  fragmentPins.appendChild(generatePin(ADS[i]));
-  fragmentCards.appendChild(generateCard(ADS[i]));
+  fragmentPins.appendChild(generatePin());
+  fragmentCards.appendChild(generateCard());
 }
 
 // Add fragments to map
