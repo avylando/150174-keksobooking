@@ -126,25 +126,21 @@ var addItemClasses = function (element, array) {
 // Generate Ad parameters
 
 var generateAuthor = function () {
-  author = {
+  return {
     avatar: 'img/avatars/user0' + (i + 1) + '.png'
   };
-
-  return author;
 };
 
 var generateHouseLocation = function () {
-  houseLocation = {
+  return {
     x: getValueInRange(minX, maxX),
     y: getValueInRange(minY, maxY)
   };
-
-  return houseLocation;
 };
 
 var generateOffer = function () {
 
-  offer = {
+  return {
     title: TITLES[i],
     adress: '' + houseLocation.x + ', ' + houseLocation.y,
     price: getValueInRange(minPrice, maxPrice),
@@ -157,8 +153,6 @@ var generateOffer = function () {
     description: '',
     photos: []
   };
-
-  return offer;
 };
 
 var getRandomFeatures = function () {
@@ -168,9 +162,8 @@ var getRandomFeatures = function () {
     offer.features[j] = getRandomValue(FEATURES);
   }
 
-  offer.features = getUniqueValues(offer.features);
+  return getUniqueValues(offer.features);
 
-  return offer.features;
 };
 
 // Create fragments
