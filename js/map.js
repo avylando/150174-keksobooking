@@ -186,7 +186,7 @@ for (var i = 0; i < adsNumber; i++) {
 
   offer.features = getRandomFeatures();
 
-  adParameters = { author, offer, houseLocation };
+  adParameters = {author: author, offer: offer, houseLocation: houseLocation};
   ads[i] = adParameters;
 
   fragmentPins.appendChild(generatePin(ads[i]));
@@ -203,7 +203,7 @@ var addClassToAll = function (array, classname) {
   for (var j = 0; j < array.length; j++) {
     array[j].classList.add(classname);
   }
-}
+};
 
 addClassToAll(cardsArr, 'hidden');
 
@@ -217,36 +217,44 @@ var mainPinMouseupHandler = function () {
   noticeForm.classList.remove('notice__form--disabled');
   tokyoPinMap.appendChild(fragmentPins);
   map.insertBefore(fragmentCards, filtersContainer);
-}
+};
 
 mainPin.addEventListener('mouseup', mainPinMouseupHandler);
 
 // Add functions show/hide card
 
 var mapPinsArr = fragmentPins.querySelectorAll('.map__pin');
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
 
 var mapPinsClickHandler = function (evt) {
-  for (var i = 0; i < mapPinsArr.length; i++) {
-    if (evt.currentTarget == mapPinsArr[i]) {
-      console.log(ads[i]);
-      mapPinsArr[i].classList.add('map__pin--active');
-      cardsArr[i].classList.remove('hidden');
+  for (var j = 0; j < mapPinsArr.length; j++) {
+    if (evt.currentTarget === mapPinsArr[j] || evt.keyCode === ENTER_KEYCODE) {
+      mapPinsArr[j].classList.add('map__pin--active');
+      cardsArr[j].classList.remove('hidden');
     }
 
-    if (evt.currentTarget != mapPinsArr[i] && mapPinsArr[i].classList.contains('map__pin--active')) {
-      mapPinsArr[i].classList.remove('map__pin--active');
-      cardsArr[i].classList.add('hidden');
+    if (evt.currentTarget !== mapPinsArr[j] && mapPinsArr[j].classList.contains('map__pin--active')) {
+      mapPinsArr[j].classList.remove('map__pin--active');
+      cardsArr[j].classList.add('hidden');
     }
   }
 };
 
-var popupCloseClickHandler = function (evt) {
-  for (var i = 0; i < cardsArr.length; i++) {
-    if (!cardsArr[i].classList.contains('hidden') && mapPinsArr[i].classList.contains('map__pin--active')) {
-      cardsArr[i].classList.add('hidden');
-      mapPinsArr[i].classList.remove('map__pin--active');
+
+var popupCloseClickHandler = function () {
+  for (var j = 0; j < cardsArr.length; j++) {
+    if (!cardsArr[j].classList.contains('hidden') && mapPinsArr[j].classList.contains('map__pin--active')) {
+      cardsArr[j].classList.add('hidden');
+      mapPinsArr[j].classList.remove('map__pin--active');
     }
+  }
+};
+
+var popupEnterCloseHandler = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    popupCloseClickHandler();
   }
 };
 
@@ -259,14 +267,14 @@ var popupEscCloseHandler = function (evt) {
 // Add event listeners
 
 var popupClose = null;
-var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
 
-for (var i = 0; i < mapPinsArr.length; i++) {
-  mapPinsArr[i].addEventListener('click', mapPinsClickHandler);
 
-  popupClose = cardsArr[i].querySelector('.popup__close');
+for (var j = 0; j < mapPinsArr.length; j++) {
+  mapPinsArr[j].addEventListener('click', mapPinsClickHandler);
+
+  popupClose = cardsArr[j].querySelector('.popup__close');
   popupClose.addEventListener('click', popupCloseClickHandler);
-};
+  popupClose.addEventListener('keydown', popupEnterCloseHandler);
+}
 
 window.addEventListener('keydown', popupEscCloseHandler);
