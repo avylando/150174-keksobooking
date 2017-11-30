@@ -186,7 +186,7 @@ for (var i = 0; i < adsNumber; i++) {
 
   offer.features = getRandomFeatures();
 
-  adParameters = { author: author, offer: offer, houseLocation: houseLocation };
+  adParameters = {author: author, offer: offer, houseLocation: houseLocation};
   ads[i] = adParameters;
 
   fragmentPins.appendChild(generatePin(ads[i]));
