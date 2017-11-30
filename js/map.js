@@ -209,14 +209,23 @@ addClassToAll(cardsArr, 'hidden');
 
 // Map and form activation
 
-var noticeForm = document.querySelector('.notice__form');
 var mainPin = map.querySelector('.map__pin--main');
+var noticeForm = document.querySelector('.notice__form');
+var noticeFieldsets = noticeForm.querySelectorAll('fieldset');
+
+var removeElementsAttribute = function (arr, attribute) {
+  for (var j = 0; j < arr.length; j++) {
+    arr[j].removeAttribute(attribute);
+  }
+};
 
 var mainPinMouseupHandler = function () {
   map.classList.remove('map--faded');
   noticeForm.classList.remove('notice__form--disabled');
   tokyoPinMap.appendChild(fragmentPins);
   map.insertBefore(fragmentCards, filtersContainer);
+
+  removeElementsAttribute(noticeFieldsets, 'disabled');
 };
 
 mainPin.addEventListener('mouseup', mainPinMouseupHandler);
