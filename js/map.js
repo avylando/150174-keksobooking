@@ -236,6 +236,9 @@ var mapPinsArr = fragmentPins.querySelectorAll('.map__pin');
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+var findClass = function (element, className) {
+  return element.classList.contains(className);
+};
 
 var mapPinsClickHandler = function (evt) {
   for (var j = 0; j < mapPinsArr.length; j++) {
@@ -244,7 +247,7 @@ var mapPinsClickHandler = function (evt) {
       cardsArr[j].classList.remove('hidden');
     }
 
-    if (evt.currentTarget !== mapPinsArr[j] && mapPinsArr[j].classList.contains('map__pin--active')) {
+    if (evt.currentTarget !== mapPinsArr[j] && findClass(mapPinsArr[j], 'map__pin--active')) {
       mapPinsArr[j].classList.remove('map__pin--active');
       cardsArr[j].classList.add('hidden');
     }
@@ -253,7 +256,7 @@ var mapPinsClickHandler = function (evt) {
 
 var popupCloseClickHandler = function () {
   for (var j = 0; j < cardsArr.length; j++) {
-    if (!cardsArr[j].classList.contains('hidden') && mapPinsArr[j].classList.contains('map__pin--active')) {
+    if (!findClass(cardsArr[j], 'hidden') && findClass(mapPinsArr[j], 'map__pin--active')) {
       cardsArr[j].classList.add('hidden');
       mapPinsArr[j].classList.remove('map__pin--active');
     }
@@ -334,21 +337,43 @@ inputTypeHouse.addEventListener('change', synchronizeTypeAndPriceHandler);
 
 var inputRoomNumber = noticeForm.querySelector('#room_number');
 var inputCapacity = noticeForm.querySelector('#capacity');
-// var inputCapacityOptions = inputCapacity.querySelectorAll('option');
+var inputRoomsNumberOptions = inputRoomNumber.querySelectorAll('option');
+var inputCapacityOptions = inputCapacity.querySelectorAll('option');
+
+
+var disableSelectOptions = function (roomsElement, arrGuests) {
+  for (var k = 0; k < arrGuests.length; k++) {
+    if (arrGuests[k].value > roomsElement.value) {
+      arrGuests[k].setAttribute('disabled', true);
+    } else if ((arrGuests[k].value <= roomsElement.value) && (roomsElement.value !== '100') && (arrGuests[k].value !== '0')) {
+      arrGuests[k].removeAttribute('disabled');
+    } else if (arrGuests[k].value === '0' && roomsElement.value !== '100') {
+      arrGuests[k].setAttribute('disabled', true);
+    } else if (arrGuests[k].value === '0' && roomsElement.value === '100') {
+      arrGuests[k].removeAttribute('disabled');
+    } else if (arrGuests[k].value !== '0' && roomsElement.value === '100') {
+      arrGuests[k].setAttribute('disabled', true);
+    }
+  }
+};
+
+var roomCapacityChangeHandler = function (arrRooms, arrGuests) {
+  for (var k = 0; k < arrRooms.length; k++) {
+    if (inputRoomNumber.value === arrRooms[k].value && arrRooms[k].value !== '100') {
+      inputCapacity.value = arrRooms[k].value;
+      disableSelectOptions(arrRooms[k], arrGuests);
+    } else if (inputRoomNumber.value === arrRooms[k].value && arrRooms[k].value === '100') {
+      inputCapacity.value = '0';
+      disableSelectOptions(arrRooms[k], arrGuests);
+    }
+  }
+};
 
 // Set default capacity value
 inputCapacity.value = '1';
 
 inputRoomNumber.addEventListener('change', function () {
-  if (inputRoomNumber.value === '1') {
-    inputCapacity.value = '1';
-  } else if (inputRoomNumber.value === '2') {
-    inputCapacity.value = '2';
-  } else if (inputRoomNumber.value === '3') {
-    inputCapacity.value = '3';
-  } else if (inputRoomNumber.value === '100') {
-    inputCapacity.value = '0';
-  }
+  roomCapacityChangeHandler(inputRoomsNumberOptions, inputCapacityOptions);
 });
 
 // Add validation test on address field
