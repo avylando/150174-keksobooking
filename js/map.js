@@ -45,8 +45,8 @@ var pinHeight = 64;
 var generatePin = function (obj) {
   var pinElement = mapPinTemplate.cloneNode(true);
   pinElement.querySelector('img').src = obj.author.avatar;
-  pinElement.style.left = (obj.houseLocation.x - pinWidth) + 'px';
-  pinElement.style.top = (obj.houseLocation.y - pinHeight) + 'px';
+  pinElement.style.left = (obj.houseLocation.x - (pinWidth / 2)) + 'px';
+  pinElement.style.top = (obj.houseLocation.y + pinHeight) + 'px';
 
   return pinElement;
 };
@@ -68,8 +68,8 @@ var generateCard = function (obj) {
   cardElement.querySelectorAll('.popup__features > li').textContent = addItemClasses(cardElement, obj.offer.features);
   cardElement.querySelector('.popup__features + p').textContent = obj.offer.description;
   cardElement.querySelector('.popup__avatar').src = obj.author.avatar;
-  cardElement.style.left = (obj.houseLocation.x - pinWidth) + 'px';
-  cardElement.style.top = (obj.houseLocation.y - pinHeight) + 'px';
+  cardElement.style.left = (obj.houseLocation.x - (pinWidth / 2)) + 'px';
+  cardElement.style.top = (obj.houseLocation.y + pinHeight) + 'px';
 
   return cardElement;
 };
@@ -236,6 +236,9 @@ var mapPinsArr = fragmentPins.querySelectorAll('.map__pin');
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+var findClass = function (element, className) {
+  return element.classList.contains(className);
+};
 
 var mapPinsClickHandler = function (evt) {
   for (var j = 0; j < mapPinsArr.length; j++) {
@@ -244,17 +247,16 @@ var mapPinsClickHandler = function (evt) {
       cardsArr[j].classList.remove('hidden');
     }
 
-    if (evt.currentTarget !== mapPinsArr[j] && mapPinsArr[j].classList.contains('map__pin--active')) {
+    if (evt.currentTarget !== mapPinsArr[j] && findClass(mapPinsArr[j], 'map__pin--active')) {
       mapPinsArr[j].classList.remove('map__pin--active');
       cardsArr[j].classList.add('hidden');
     }
   }
 };
 
-
 var popupCloseClickHandler = function () {
   for (var j = 0; j < cardsArr.length; j++) {
-    if (!cardsArr[j].classList.contains('hidden') && mapPinsArr[j].classList.contains('map__pin--active')) {
+    if (!findClass(cardsArr[j], 'hidden') && findClass(mapPinsArr[j], 'map__pin--active')) {
       cardsArr[j].classList.add('hidden');
       mapPinsArr[j].classList.remove('map__pin--active');
     }
@@ -287,3 +289,104 @@ for (var j = 0; j < mapPinsArr.length; j++) {
 }
 
 window.addEventListener('keydown', popupEscCloseHandler);
+
+// Validation form
+
+var selectTimeIn = noticeForm.querySelector('#timein');
+var selectTimeOut = noticeForm.querySelector('#timeout');
+
+var synchronizeSelectsValues = function (selectGet, selectSet) {
+  if (selectGet.value === '12:00') {
+    selectSet.value = '12:00';
+  } else if (selectGet.value === '13:00') {
+    selectSet.value = '13:00';
+  } else if (selectGet.value === '14:00') {
+    selectSet.value = '14:00';
+  }
+};
+
+selectTimeIn.addEventListener('change', function () {
+  synchronizeSelectsValues(selectTimeIn, selectTimeOut);
+});
+
+selectTimeOut.addEventListener('change', function () {
+  synchronizeSelectsValues(selectTimeOut, selectTimeIn);
+});
+
+
+var inputTypeHouse = noticeForm.querySelector('#type');
+var inputPrice = noticeForm.querySelector('#price');
+
+// Set default min attribute
+inputPrice.setAttribute('min', '1000');
+
+var synchronizeTypeAndPriceHandler = function () {
+  if (inputTypeHouse.value === 'bungalo') {
+    inputPrice.setAttribute('min', 0);
+  } else if (inputTypeHouse.value === 'flat') {
+    inputPrice.setAttribute('min', 1000);
+  } else if (inputTypeHouse.value === 'house') {
+    inputPrice.setAttribute('min', 5000);
+  } else if (inputTypeHouse.value === 'palace') {
+    inputPrice.setAttribute('min', 10000);
+  }
+};
+
+inputTypeHouse.addEventListener('change', synchronizeTypeAndPriceHandler);
+
+
+var inputRoomNumber = noticeForm.querySelector('#room_number');
+var inputCapacity = noticeForm.querySelector('#capacity');
+var inputRoomsNumberOptions = inputRoomNumber.querySelectorAll('option');
+var inputCapacityOptions = inputCapacity.querySelectorAll('option');
+
+
+var disableSelectOptions = function (roomsElement, arrGuests) {
+  for (var k = 0; k < arrGuests.length; k++) {
+    if (arrGuests[k].value > roomsElement.value) {
+      arrGuests[k].setAttribute('disabled', true);
+    } else if ((arrGuests[k].value <= roomsElement.value) && (roomsElement.value !== '100') && (arrGuests[k].value !== '0')) {
+      arrGuests[k].removeAttribute('disabled');
+    } else if (arrGuests[k].value === '0' && roomsElement.value !== '100') {
+      arrGuests[k].setAttribute('disabled', true);
+    } else if (arrGuests[k].value === '0' && roomsElement.value === '100') {
+      arrGuests[k].removeAttribute('disabled');
+    } else if (arrGuests[k].value !== '0' && roomsElement.value === '100') {
+      arrGuests[k].setAttribute('disabled', true);
+    }
+  }
+};
+
+var roomCapacityChangeHandler = function (arrRooms, arrGuests) {
+  for (var k = 0; k < arrRooms.length; k++) {
+    if (inputRoomNumber.value === arrRooms[k].value && arrRooms[k].value !== '100') {
+      inputCapacity.value = arrRooms[k].value;
+      disableSelectOptions(arrRooms[k], arrGuests);
+    } else if (inputRoomNumber.value === arrRooms[k].value && arrRooms[k].value === '100') {
+      inputCapacity.value = '0';
+      disableSelectOptions(arrRooms[k], arrGuests);
+    }
+  }
+};
+
+// Set default capacity value
+inputCapacity.value = '1';
+
+inputRoomNumber.addEventListener('change', function () {
+  roomCapacityChangeHandler(inputRoomsNumberOptions, inputCapacityOptions);
+});
+
+// Add validation test on address field
+
+var inputAddress = noticeForm.querySelector('#address');
+
+var checkRequiredField = function (element, event) {
+  if (!element.value) {
+    event.preventDefault();
+    element.focus();
+  }
+};
+
+noticeForm.addEventListener('submit', function (evt) {
+  checkRequiredField(inputAddress, evt);
+});
