@@ -321,14 +321,15 @@ var inputPrice = noticeForm.querySelector('#price');
 inputPrice.setAttribute('min', '1000');
 
 var synchronizeTypeAndPriceHandler = function () {
-  if (inputTypeHouse.value === 'bungalo') {
-    inputPrice.setAttribute('min', 0);
-  } else if (inputTypeHouse.value === 'flat') {
-    inputPrice.setAttribute('min', 1000);
-  } else if (inputTypeHouse.value === 'house') {
-    inputPrice.setAttribute('min', 5000);
-  } else if (inputTypeHouse.value === 'palace') {
-    inputPrice.setAttribute('min', 10000);
+  switch (inputTypeHouse.value) {
+    case 'bungalo': inputPrice.setAttribute('min', 0);
+      break;
+    case 'flat': inputPrice.setAttribute('min', 1000);
+      break;
+    case 'house': inputPrice.setAttribute('min', 5000);
+      break;
+    case 'palace': inputPrice.setAttribute('min', 10000);
+      break;
   }
 };
 
