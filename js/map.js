@@ -193,6 +193,7 @@ for (var i = 0; i < adsNumber; i++) {
   fragmentCards.appendChild(generateCard(ads[i]));
 }
 
+
 // Hide Cards
 
 var filtersContainer = map.querySelector('.map__filters-container');
@@ -206,6 +207,7 @@ var addClassToAll = function (array, classname) {
 };
 
 addClassToAll(cardsArr, 'hidden');
+
 
 // Map and form activation
 
@@ -229,6 +231,7 @@ var mainPinMouseupHandler = function () {
 };
 
 mainPin.addEventListener('mouseup', mainPinMouseupHandler);
+
 
 // Add functions show/hide card
 
@@ -275,20 +278,19 @@ var popupEscCloseHandler = function (evt) {
   }
 };
 
+
 // Add event listeners
-
-var popupClose = null;
-
 
 for (var j = 0; j < mapPinsArr.length; j++) {
   mapPinsArr[j].addEventListener('click', mapPinsClickHandler);
 
-  popupClose = cardsArr[j].querySelector('.popup__close');
+  var popupClose = cardsArr[j].querySelector('.popup__close');
   popupClose.addEventListener('click', popupCloseClickHandler);
   popupClose.addEventListener('keydown', popupEnterCloseHandler);
 }
 
 window.addEventListener('keydown', popupEscCloseHandler);
+
 
 // Validation form
 
@@ -376,6 +378,7 @@ inputCapacity.value = '1';
 inputRoomNumber.addEventListener('change', function () {
   roomCapacityChangeHandler(inputRoomsNumberOptions, inputCapacityOptions);
 });
+
 
 // Add validation test on address field
 
