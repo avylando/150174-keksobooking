@@ -28,5 +28,13 @@
       }
       return output;
     },
+
+    getPinPositionX: function (houseX, width) {
+      return (houseX - (width / 2)) + 'px';
+    },
+
+    getPinPositionY: function (houseY, height) {
+      return (houseY - height) + 'px';
+    }
   };
 })();
