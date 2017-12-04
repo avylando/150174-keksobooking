@@ -86,7 +86,10 @@
       map.insertBefore(fragmentCards, filtersContainer);
 
       // Set adress value
-      inputAddress.value = 'x: ' + (parseInt(mainPin.style.left, 10) + (mainPinWidth / 2)) + ', y: ' + (parseInt(mainPin.style.top, 10) + mainPinHeight);
+      var adressX = (parseInt(mainPin.style.left, 10) + (mainPinWidth / 2));
+      var adressY = (parseInt(mainPin.style.top, 10) + mainPinHeight);
+
+      inputAddress.value = 'x: ' + adressX + ', y: ' + adressY;
 
       document.removeEventListener('mousemove', mainPinMouseMoveHandler);
       mainPin.removeEventListener('mouseup', mainPinMouseUpHandler);
