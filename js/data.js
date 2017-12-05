@@ -17,6 +17,8 @@
   var maxX = 900;
   var minY = 100;
   var maxY = 500;
+  var pinWidth = 46;
+  var pinHeight = 64;
 
   var generateAuthor = function (i) {
     return {
@@ -26,8 +28,8 @@
 
   var generateHouseLocation = function () {
     return {
-      x: window.lib.getValueInRange(minX, maxX),
-      y: window.lib.getValueInRange(minY, maxY)
+      x: window.lib.getValueInRange(minX, maxX) + (pinWidth / 2),
+      y: window.lib.getValueInRange(minY, maxY) + pinHeight
     };
   };
 
@@ -35,7 +37,7 @@
 
     return {
       title: titles[i],
-      adress: '' + houseLoc.x + ', ' + houseLoc.y,
+      adress: 'x: ' + houseLoc.x + ', y: ' + houseLoc.y,
       price: window.lib.getValueInRange(minPrice, maxPrice),
       type: window.lib.getRandomValue(houseTypes),
       rooms: window.lib.getValueInRange(minRoomsNumber, maxRoomsNumber),
@@ -87,6 +89,12 @@
   window.data = {
     adParams: adParameters,
     ads: adsArr,
+    minX: minX,
+    maxX: maxX,
+    minY: minY,
+    maxY: maxY,
+    pinWidth: pinWidth,
+    pinHeight: pinHeight,
     template: document.querySelector('template').content
   };
 

@@ -60,8 +60,8 @@
       cardElement.querySelectorAll('.popup__features > li').textContent = addItemClasses(cardElement, obj.offer.features);
       cardElement.querySelector('.popup__features + p').textContent = obj.offer.description;
       cardElement.querySelector('.popup__avatar').src = obj.author.avatar;
-      cardElement.style.left = (obj.houseLocation.x - (window.pin.width / 2)) + 'px';
-      cardElement.style.top = (obj.houseLocation.y + window.pin.height) + 'px';
+      cardElement.style.left = window.lib.getPinPositionX(obj.houseLocation.x, window.data.pinWidth);
+      cardElement.style.top = window.lib.getPinPositionY(obj.houseLocation.y, window.data.pinHeight);
 
       return cardElement;
     }

@@ -31,7 +31,7 @@
   addClassToAll(cardsArr, 'hidden');
 
 
-  // Map and form activation
+  // Map and form prepare
 
   var map = document.querySelector('.map');
   var tokyoPinMap = document.querySelector('.map__pins');
@@ -46,15 +46,59 @@
     }
   };
 
-  var mainPinMouseupHandler = function () {
-    map.classList.remove('map--faded');
-    noticeForm.classList.remove('notice__form--disabled');
-    tokyoPinMap.appendChild(fragmentPins);
-    map.insertBefore(fragmentCards, filtersContainer);
-    removeElementsAttribute(noticeFieldsets, 'disabled');
-  };
 
-  mainPin.addEventListener('mouseup', mainPinMouseupHandler);
+  // Add draggable Main pin and activate map
+
+  var mainPinWidth = 64;
+  var mainPinHeight = 80;
+  var mainPinShadowWidth = 156;
+  var mainPinMinY = window.data.minY;
+  var mainPinMaxY = window.data.maxY;
+  var inputAddress = noticeForm.querySelector('#address');
+
+  mainPin.addEventListener('mousedown', function (event) {
+    event.preventDefault();
+
+    var mainPinMouseMoveHandler = function (evt) {
+      evt.preventDefault();
+
+      mainPin.style.left = (evt.pageX - mainPinShadowWidth / 2) + 'px';
+      mainPin.style.top = evt.pageY + 'px';
+
+      // Set vertical limits
+      if (evt.pageY < mainPinMinY) {
+        mainPin.style.top = mainPinMinY + 'px';
+      } else if (evt.pageY > mainPinMaxY) {
+        mainPin.style.top = mainPinMaxY + 'px';
+      }
+    };
+
+    var mainPinMouseUpHandler = function (evt) {
+      evt.preventDefault();
+
+      // Map and form activation
+      map.classList.remove('map--faded');
+      noticeForm.classList.remove('notice__form--disabled');
+      removeElementsAttribute(noticeFieldsets, 'disabled');
+
+      // Add fragments on map
+      tokyoPinMap.appendChild(fragmentPins);
+      map.insertBefore(fragmentCards, filtersContainer);
+
+      // Set adress value
+      var adressX = (parseInt(mainPin.style.left, 10) + (mainPinWidth / 2));
+      var adressY = (parseInt(mainPin.style.top, 10) + mainPinHeight);
+
+      inputAddress.value = 'x: ' + adressX + ', y: ' + adressY;
+
+      document.removeEventListener('mousemove', mainPinMouseMoveHandler);
+      mainPin.removeEventListener('mouseup', mainPinMouseUpHandler);
+    };
+
+    document.addEventListener('mousemove', mainPinMouseMoveHandler);
+    mainPin.addEventListener('mouseup', mainPinMouseUpHandler);
+
+  });
 
 
   // Add functions show/hide card
@@ -113,7 +157,7 @@
     popupClose.addEventListener('keydown', popupEnterCloseHandler);
   }
 
-  window.addEventListener('keydown', popupEscCloseHandler);
+  document.addEventListener('keydown', popupEscCloseHandler);
 
 })();
 
