@@ -3,36 +3,38 @@
 
 (function () {
 
-  // Create fragments
+  // console.log(window.data.ads);
 
-  var fragmentPins = document.createDocumentFragment();
-  var fragmentCards = document.createDocumentFragment();
+  // // Create fragments
 
-
-  // Append ads to fragment
-
-  for (var i = 0; i < window.data.ads.length; i++) {
-
-    fragmentPins.appendChild(window.pin.generate(window.data.ads[i]));
-    fragmentCards.appendChild(window.card.generate(window.data.ads[i]));
-  }
-
-  // Create Pins array
-
-  var usersPins = fragmentPins.querySelectorAll('.map__pin--users');
+  // var fragmentPins = document.createDocumentFragment();
+  // var fragmentCards = document.createDocumentFragment();
 
 
-  // Hide Cards
+  // // Append ads to fragment
 
-  var usersCards = fragmentCards.querySelectorAll('.popup');
+  // for (var i = 0; i < window.data.ads.length; i++) {
 
-  var addClassToAll = function (array, classname) {
-    for (var j = 0; j < array.length; j++) {
-      array[j].classList.add(classname);
-    }
-  };
+  //   fragmentPins.appendChild(window.pin.generate(window.data.ads[i]));
+  //   fragmentCards.appendChild(window.card.generate(window.data.ads[i]));
+  // }
 
-  addClassToAll(usersCards, 'hidden');
+  // // Create Pins array
+
+  // var usersPins = fragmentPins.querySelectorAll('.map__pin--users');
+
+
+  // // Hide Cards
+
+  // var usersCards = fragmentCards.querySelectorAll('.popup');
+
+  // var addClassToAll = function (array, classname) {
+  //   for (var j = 0; j < array.length; j++) {
+  //     array[j].classList.add(classname);
+  //   }
+  // };
+
+  // addClassToAll(usersCards, 'hidden');
 
 
   // Map and form prepare
@@ -55,8 +57,12 @@
 
   var mainPinWidth = 64;
   var mainPinHeight = 80;
-  var mainPinMinY = window.data.minY;
-  var mainPinMaxY = window.data.maxY;
+  // var minX = 300;
+  // var maxX = 900;
+  var minY = 100;
+  var maxY = 500;
+  var mainPinMinY = minY;
+  var mainPinMaxY = maxY;
   var inputAddress = noticeForm.querySelector('#address');
 
   mainPin.addEventListener('mousedown', function (event) {
@@ -70,7 +76,7 @@
       var bodyMaxWidth = 1200;
 
       if (bodyWidth === bodyMaxWidth) {
-        mainPin.style.left = (evt.pageX - mainPinWidth / 2) + 'px';
+        mainPin.style.left = (evt.pageX - mainPinWidth * 2) + 'px';
       } else {
         mainPin.style.left = (evt.pageX - mainPinWidth / bodyWidth) + 'px';
       }
@@ -95,8 +101,8 @@
       removeElementsAttribute(noticeFieldsets, 'disabled');
 
       // Add fragments on map
-      tokyoPinMap.appendChild(fragmentPins);
-      map.insertBefore(fragmentCards, filtersContainer);
+      tokyoPinMap.appendChild(window.data.fragmentPins);
+      map.insertBefore(window.data.fragmentCards, filtersContainer);
 
       // Set adress value
       var adressX = (parseInt(mainPin.style.left, 10) + (mainPinWidth / 2));
@@ -113,11 +119,6 @@
     mainPin.addEventListener('mouseup', mainPinMouseUpHandler);
 
   });
-
-
-  //  Add functions show/hide card
-
-  window.showCard(usersPins, usersCards);
 
 })();
 

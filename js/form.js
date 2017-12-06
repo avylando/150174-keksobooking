@@ -72,4 +72,37 @@
     roomCapacityChangeHandler(inputRoomsNumberOptions, inputCapacityOptions);
   });
 
+  // Form submit event
+
+  var inputTitle = form.querySelector('#title');
+  var inputAddress = form.querySelector('#address');
+  var textareaDescription = form.querySelector('#description');
+  var featuresList = form.querySelectorAll('.features input[type="checkbox"]')
+
+  var postNewAd = function () {
+    console.log('Форма успешно отправлена');
+    window.lib.fieldReset(inputTitle);
+    window.lib.fieldReset(inputAddress);
+    window.lib.fieldResetToValue(inputTypeHouse, 'flat');
+    window.lib.fieldResetToValue(inputPrice, '1000');
+    window.lib.fieldResetToValue(selectTimeIn, '12:00');
+    window.lib.fieldResetToValue(selectTimeIn, '12:00');
+    window.lib.fieldResetToValue(inputRoomNumber, '1');
+    window.lib.fieldResetToValue(inputCapacity, '3');
+    window.lib.fieldReset(textareaDescription);
+    window.lib.checkboxListReset(featuresList);
+  };
+
+  var submitError = function (message) {
+    console.log(message);
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.lib.checkRequiredField(inputTitle, evt);
+    window.lib.checkRequiredField(inputAddress, evt);
+    var formData = new FormData(form);
+    window.backend.save(formData, postNewAd, submitError);
+    evt.preventDefault();
+  });
+
 })();

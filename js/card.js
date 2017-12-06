@@ -5,7 +5,8 @@
 
   // Find card template
 
-  var mapCard = window.data.template.querySelector('article.map__card');
+  var template = document.querySelector('template').content;
+  var mapCard = template.querySelector('article.map__card');
 
 
   // Useful functions
@@ -60,8 +61,8 @@
       cardElement.querySelectorAll('.popup__features > li').textContent = addItemClasses(cardElement, obj.offer.features);
       cardElement.querySelector('.popup__features + p').textContent = obj.offer.description;
       cardElement.querySelector('.popup__avatar').src = obj.author.avatar;
-      cardElement.style.left = window.lib.getPinPositionX(obj.houseLocation.x, window.data.pinWidth);
-      cardElement.style.top = window.lib.getPinPositionY(obj.houseLocation.y, window.data.pinHeight);
+      cardElement.style.left = '30px';
+      cardElement.style.top = '170px';
 
       return cardElement;
     }
