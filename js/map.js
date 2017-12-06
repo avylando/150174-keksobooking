@@ -17,10 +17,14 @@
     fragmentCards.appendChild(window.card.generate(window.data.ads[i]));
   }
 
+  // Create Pins array
+
+  var usersPins = fragmentPins.querySelectorAll('.map__pin--users');
+
 
   // Hide Cards
 
-  var cardsArr = fragmentCards.querySelectorAll('.popup');
+  var usersCards = fragmentCards.querySelectorAll('.popup');
 
   var addClassToAll = function (array, classname) {
     for (var j = 0; j < array.length; j++) {
@@ -28,7 +32,7 @@
     }
   };
 
-  addClassToAll(cardsArr, 'hidden');
+  addClassToAll(usersCards, 'hidden');
 
 
   // Map and form prepare
@@ -51,7 +55,6 @@
 
   var mainPinWidth = 64;
   var mainPinHeight = 80;
-  var mainPinShadowWidth = 156;
   var mainPinMinY = window.data.minY;
   var mainPinMaxY = window.data.maxY;
   var inputAddress = noticeForm.querySelector('#address');
@@ -62,7 +65,16 @@
     var mainPinMouseMoveHandler = function (evt) {
       evt.preventDefault();
 
-      mainPin.style.left = (evt.pageX - mainPinShadowWidth / 2) + 'px';
+      // Compensation offset on fullscreen
+      var bodyWidth = document.querySelector('body').clientWidth;
+      var bodyMaxWidth = 1200;
+
+      if (bodyWidth === bodyMaxWidth) {
+        mainPin.style.left = (evt.pageX - mainPinWidth / 2) + 'px';
+      } else {
+        mainPin.style.left = (evt.pageX - mainPinWidth / bodyWidth) + 'px';
+      }
+
       mainPin.style.top = evt.pageY + 'px';
 
       // Set vertical limits
@@ -72,6 +84,7 @@
         mainPin.style.top = mainPinMaxY + 'px';
       }
     };
+
 
     var mainPinMouseUpHandler = function (evt) {
       evt.preventDefault();
@@ -93,6 +106,7 @@
 
       document.removeEventListener('mousemove', mainPinMouseMoveHandler);
       mainPin.removeEventListener('mouseup', mainPinMouseUpHandler);
+
     };
 
     document.addEventListener('mousemove', mainPinMouseMoveHandler);
@@ -101,63 +115,9 @@
   });
 
 
-  // Add functions show/hide card
+  //  Add functions show/hide card
 
-  var mapPinsArr = fragmentPins.querySelectorAll('.map__pin');
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
-
-  var findClass = function (element, className) {
-    return element.classList.contains(className);
-  };
-
-  var mapPinsClickHandler = function (evt) {
-    for (var j = 0; j < mapPinsArr.length; j++) {
-      if (evt.currentTarget === mapPinsArr[j] || evt.keyCode === ENTER_KEYCODE) {
-        mapPinsArr[j].classList.add('map__pin--active');
-        cardsArr[j].classList.remove('hidden');
-      }
-
-      if (evt.currentTarget !== mapPinsArr[j] && findClass(mapPinsArr[j], 'map__pin--active')) {
-        mapPinsArr[j].classList.remove('map__pin--active');
-        cardsArr[j].classList.add('hidden');
-      }
-    }
-  };
-
-  var popupCloseClickHandler = function () {
-    for (var j = 0; j < cardsArr.length; j++) {
-      if (!findClass(cardsArr[j], 'hidden') && findClass(mapPinsArr[j], 'map__pin--active')) {
-        cardsArr[j].classList.add('hidden');
-        mapPinsArr[j].classList.remove('map__pin--active');
-      }
-    }
-  };
-
-  var popupEnterCloseHandler = function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      popupCloseClickHandler();
-    }
-  };
-
-  var popupEscCloseHandler = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      popupCloseClickHandler();
-    }
-  };
-
-
-  // Add event listeners
-
-  for (var j = 0; j < mapPinsArr.length; j++) {
-    mapPinsArr[j].addEventListener('click', mapPinsClickHandler);
-
-    var popupClose = cardsArr[j].querySelector('.popup__close');
-    popupClose.addEventListener('click', popupCloseClickHandler);
-    popupClose.addEventListener('keydown', popupEnterCloseHandler);
-  }
-
-  document.addEventListener('keydown', popupEscCloseHandler);
+  window.showCard(usersPins, usersCards);
 
 })();
 

@@ -16,6 +16,7 @@
       pinElement.querySelector('img').src = obj.author.avatar;
       pinElement.style.left = window.lib.getPinPositionX(obj.houseLocation.x, window.data.pinWidth);
       pinElement.style.top = window.lib.getPinPositionY(obj.houseLocation.y, window.data.pinHeight);
+      pinElement.classList.add('map__pin--users');
 
       return pinElement;
     }

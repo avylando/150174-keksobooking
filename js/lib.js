@@ -6,6 +6,9 @@
 
   window.lib = {
 
+    ESC_KEYCODE: 27,
+    ENTER_KEYCODE: 13,
+
     getRandomValue: function (array) {
       return array[Math.floor(Math.random() * array.length)];
     },
@@ -29,12 +32,35 @@
       return output;
     },
 
+    getOptionValuesInSelect: function (select) {
+      var selectOptions = select.querySelectorAll('option');
+      var optionValue = null;
+      var optionValues = [];
+      for (var i = 0; i < selectOptions.length; i++) {
+        optionValue = selectOptions[i].getAttribute('value');
+        optionValues[i] = optionValue;
+      }
+      return optionValues;
+    },
+
+    syncValues: function (elem, val) {
+      elem.value = val;
+    },
+
+    syncValueWithMin: function (elem, val) {
+      elem.min = val;
+    },
+
     getPinPositionX: function (houseX, width) {
       return (houseX - (width / 2)) + 'px';
     },
 
     getPinPositionY: function (houseY, height) {
       return (houseY - height) + 'px';
+    },
+
+    findClass: function (element, className) {
+      return element.classList.contains(className);
     }
   };
 })();

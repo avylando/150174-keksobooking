@@ -7,50 +7,29 @@
 
   var form = document.querySelector('.notice__form');
 
+  // Sync timeIn and timeOut
+
   var selectTimeIn = form.querySelector('#timein');
   var selectTimeOut = form.querySelector('#timeout');
+  var timeInValues = window.lib.getOptionValuesInSelect(selectTimeIn);
+  var timeOutValues = window.lib.getOptionValuesInSelect(selectTimeOut);
 
-  var synchronizeSelectsValues = function (selectGet, selectSet) {
-    switch (selectGet.value) {
-      case '12:00': selectSet.value = '12:00';
-        break;
-      case '13:00': selectSet.value = '13:00';
-        break;
-      case '14:00': selectSet.value = '14:00';
-        break;
-    }
-  };
+  window.synchronizeFields(selectTimeIn, selectTimeOut, timeInValues, timeOutValues, window.lib.syncValues);
 
-  selectTimeIn.addEventListener('change', function () {
-    synchronizeSelectsValues(selectTimeIn, selectTimeOut);
-  });
-
-  selectTimeOut.addEventListener('change', function () {
-    synchronizeSelectsValues(selectTimeOut, selectTimeIn);
-  });
-
+  // Sync house type and price
 
   var inputTypeHouse = form.querySelector('#type');
   var inputPrice = form.querySelector('#price');
+  var houseTypes = window.lib.getOptionValuesInSelect(inputTypeHouse);
+  var minPrices = ['1000', '0', '5000', '10000'];
 
   // Set default min attribute
   inputPrice.setAttribute('min', '1000');
 
-  var synchronizeTypeAndPriceHandler = function () {
-    switch (inputTypeHouse.value) {
-      case 'bungalo': inputPrice.setAttribute('min', 0);
-        break;
-      case 'flat': inputPrice.setAttribute('min', 1000);
-        break;
-      case 'house': inputPrice.setAttribute('min', 5000);
-        break;
-      case 'palace': inputPrice.setAttribute('min', 10000);
-        break;
-    }
-  };
+  window.synchronizeFields(inputTypeHouse, inputPrice, houseTypes, minPrices, window.lib.syncValueWithMin);
 
-  inputTypeHouse.addEventListener('change', synchronizeTypeAndPriceHandler);
 
+  // Sync room number and capacity
 
   var inputRoomNumber = form.querySelector('#room_number');
   var inputCapacity = form.querySelector('#capacity');
@@ -91,22 +70,6 @@
 
   inputRoomNumber.addEventListener('change', function () {
     roomCapacityChangeHandler(inputRoomsNumberOptions, inputCapacityOptions);
-  });
-
-
-  // Add validation test on address field
-
-  var inputAddress = form.querySelector('#address');
-
-  var checkRequiredField = function (element, event) {
-    if (!element.value) {
-      event.preventDefault();
-      element.focus();
-    }
-  };
-
-  form.addEventListener('submit', function (evt) {
-    checkRequiredField(inputAddress, evt);
   });
 
 })();
