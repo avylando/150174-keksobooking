@@ -63,6 +63,7 @@
       cardElement.querySelector('.popup__avatar').src = obj.author.avatar;
       cardElement.style.left = '30px';
       cardElement.style.top = '170px';
+      cardElement.style.zIndex = '200';
 
       return cardElement;
     }

@@ -17,7 +17,6 @@
         if (evt.currentTarget !== buttons[i] && window.lib.findClass(buttons[i], 'map__pin--active')) {
           buttons[i].classList.remove('map__pin--active');
           cards[i].classList.add('hidden');
-          document.removeEventListener('keydown', cardEscCloseHandler);
         }
       }
     };
@@ -27,6 +26,7 @@
         if (!window.lib.findClass(cards[i], 'hidden') && window.lib.findClass(buttons[i], 'map__pin--active')) {
           cards[i].classList.add('hidden');
           buttons[i].classList.remove('map__pin--active');
+          document.removeEventListener('keydown', cardEscCloseHandler);
         }
       }
     };

@@ -10,8 +10,11 @@
       xhr.addEventListener('load', function () {
         switch (xhr.status) {
           case 200:
-            console.log(xhr);
             onLoad(xhr.response);
+            break;
+
+          case 404:
+            onError('Ошибка ' + xhr.status + ' ' + xhr.statusText + 'Данные не найдены');
             break;
 
           default:
@@ -20,7 +23,7 @@
       });
 
       xhr.addEventListener('error', function () {
-        onError('Ошибка соединения. Попробуйте обновить страницу и повторить запрос');
+        onError('Ошибка соединения с сервером');
       });
 
       xhr.addEventListener('timeout', function () {
@@ -48,7 +51,7 @@
       });
 
       xhr.addEventListener('error', function () {
-        onError('Ошибка соединения. Попробуйте обновить страницу и повторить запрос');
+        onError('Ошибка соединения. Обновите страницу и повторите запрос');
       });
 
       xhr.addEventListener('timeout', function () {

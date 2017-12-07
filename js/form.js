@@ -77,10 +77,9 @@
   var inputTitle = form.querySelector('#title');
   var inputAddress = form.querySelector('#address');
   var textareaDescription = form.querySelector('#description');
-  var featuresList = form.querySelectorAll('.features input[type="checkbox"]')
+  var featuresList = form.querySelectorAll('.features input[type="checkbox"]');
 
   var postNewAd = function () {
-    console.log('Форма успешно отправлена');
     window.lib.fieldReset(inputTitle);
     window.lib.fieldReset(inputAddress);
     window.lib.fieldResetToValue(inputTypeHouse, 'flat');
@@ -93,8 +92,29 @@
     window.lib.checkboxListReset(featuresList);
   };
 
-  var submitError = function (message) {
-    console.log(message);
+  var submitError = function (errorMessage) {
+    var errorPopup = document.createElement('div');
+
+    // Element position
+    errorPopup.style.position = 'absolute';
+    errorPopup.style.right = '0';
+    errorPopup.style.bottom = '40px';
+    errorPopup.style.zIndex = '200';
+    // Element sizes
+    errorPopup.style.boxSizing = 'border-box';
+    errorPopup.style.width = '160px';
+    errorPopup.style.padding = '10px';
+    // Element text style
+    errorPopup.style.fontSize = '12px';
+    errorPopup.style.color = '#ffffff';
+    errorPopup.style.textAlign = 'center';
+    // Element style
+    errorPopup.style.backgroundColor = 'rgba(255, 109, 81, 0.7)';
+    errorPopup.style.borderRadius = '10px';
+
+    errorPopup.textContent = errorMessage;
+    form.style.position = 'relative';
+    form.insertAdjacentElement('beforeEnd', errorPopup);
   };
 
   form.addEventListener('submit', function (evt) {

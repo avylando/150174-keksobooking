@@ -61,6 +61,24 @@
       return element.classList.contains(className);
     },
 
+    addClassToAll: function (array, className) {
+      for (var i = 0; i < array.length; i++) {
+        array[i].classList.add(className);
+      }
+    },
+
+    removeClassFromAll: function (array, className) {
+      for (var i = 0; i < array.length; i++) {
+        array[i].classList.remove(className);
+      }
+    },
+
+    removeElementsAttribute: function (arr, attribute) {
+      for (var j = 0; j < arr.length; j++) {
+        arr[j].removeAttribute(attribute);
+      }
+    },
+
     checkRequiredField: function (element, event) {
       if (!element.value) {
         event.preventDefault();
