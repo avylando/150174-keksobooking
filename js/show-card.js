@@ -7,24 +7,26 @@
   window.showCard = function (buttons, cards) {
 
     var buttonsClickHandler = function (evt) {
-      for (var j = 0; j < buttons.length; j++) {
-        if (evt.currentTarget === buttons[j] || evt.keyCode === window.lib.ENTER_KEYCODE) {
-          buttons[j].classList.add('map__pin--active');
-          cards[j].classList.remove('hidden');
+      for (var i = 0; i < buttons.length; i++) {
+        if (evt.currentTarget === buttons[i] || evt.keyCode === window.lib.ENTER_KEYCODE) {
+          buttons[i].classList.add('map__pin--active');
+          cards[i].classList.remove('hidden');
+          document.addEventListener('keydown', cardEscCloseHandler);
         }
 
-        if (evt.currentTarget !== buttons[j] && window.lib.findClass(buttons[j], 'map__pin--active')) {
-          buttons[j].classList.remove('map__pin--active');
-          cards[j].classList.add('hidden');
+        if (evt.currentTarget !== buttons[i] && window.lib.findClass(buttons[i], 'map__pin--active')) {
+          buttons[i].classList.remove('map__pin--active');
+          cards[i].classList.add('hidden');
         }
       }
     };
 
     var cardCloseClickHandler = function () {
-      for (var j = 0; j < cards.length; j++) {
-        if (!window.lib.findClass(cards[j], 'hidden') && window.lib.findClass(buttons[j], 'map__pin--active')) {
-          cards[j].classList.add('hidden');
-          buttons[j].classList.remove('map__pin--active');
+      for (var i = 0; i < cards.length; i++) {
+        if (!window.lib.findClass(cards[i], 'hidden') && window.lib.findClass(buttons[i], 'map__pin--active')) {
+          cards[i].classList.add('hidden');
+          buttons[i].classList.remove('map__pin--active');
+          document.removeEventListener('keydown', cardEscCloseHandler);
         }
       }
     };
@@ -52,10 +54,14 @@
         cardClose = cards[i].querySelector('.popup__close');
         cardClose.addEventListener('click', cardCloseClickHandler);
         cardClose.addEventListener('keydown', cardEnterCloseHandler);
+
+        if (!window.lib.findClass(cards[i], 'hidden')) {
+          document.addEventListener('keydown', cardEscCloseHandler);
+        } else {
+          document.removeEventListener('keydown', cardEscCloseHandler);
+        }
       }
     })();
-
-    document.addEventListener('keydown', cardEscCloseHandler);
-
   };
+
 })();

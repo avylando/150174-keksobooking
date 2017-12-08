@@ -2,8 +2,6 @@
 
 (function () {
 
-  // Useful functions
-
   window.lib = {
 
     ESC_KEYCODE: 27,
@@ -61,6 +59,45 @@
 
     findClass: function (element, className) {
       return element.classList.contains(className);
+    },
+
+    addClassToAll: function (array, className) {
+      for (var i = 0; i < array.length; i++) {
+        array[i].classList.add(className);
+      }
+    },
+
+    removeClassFromAll: function (array, className) {
+      for (var i = 0; i < array.length; i++) {
+        array[i].classList.remove(className);
+      }
+    },
+
+    removeElementsAttribute: function (arr, attribute) {
+      for (var j = 0; j < arr.length; j++) {
+        arr[j].removeAttribute(attribute);
+      }
+    },
+
+    checkRequiredField: function (element, event) {
+      if (!element.value) {
+        event.preventDefault();
+        element.focus();
+      }
+    },
+
+    fieldReset: function (field) {
+      field.value = '';
+    },
+
+    fieldResetToValue: function (field, val) {
+      field.value = val;
+    },
+
+    checkboxListReset: function (array) {
+      for (var i = 0; i < array.length; i++) {
+        array[i].checked = false;
+      }
     }
   };
 })();
