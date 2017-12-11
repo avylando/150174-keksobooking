@@ -54,12 +54,6 @@
         cardClose = cards[i].querySelector('.popup__close');
         cardClose.addEventListener('click', cardCloseClickHandler);
         cardClose.addEventListener('keydown', cardEnterCloseHandler);
-
-        if (!window.lib.findClass(cards[i], 'hidden')) {
-          document.addEventListener('keydown', cardEscCloseHandler);
-        } else {
-          document.removeEventListener('keydown', cardEscCloseHandler);
-        }
       }
     })();
   };
