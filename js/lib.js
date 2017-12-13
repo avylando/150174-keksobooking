@@ -17,18 +17,10 @@
     },
 
     getUniqueValues: function (array) {
-      var obj = {};
-      var output = [];
-      var j = 0;
-
-      for (var i = 0; i < array.length; i++) {
-        var item = array[i];
-        if (obj[item] !== 1) {
-          obj[item] = 1;
-          output[j++] = item;
-        }
-      }
-      return output;
+      var filteredArray = array.filter(function (it, i) {
+        return array.indexOf(it) === i;
+      });
+      return filteredArray;
     },
 
     getOptionValuesInSelect: function (select) {
@@ -76,9 +68,9 @@
     },
 
     removeClassFromAll: function (array, className) {
-      for (var i = 0; i < array.length; i++) {
-        array[i].classList.remove(className);
-      }
+      array.forEach(function (elem) {
+        elem.classList.remove(className);
+      });
     },
 
     removeClassFromRandom: function (array, className, number) {
@@ -97,10 +89,14 @@
       }
     },
 
-    removeElementsAttribute: function (arr, attribute) {
-      arr.forEach(function (elem) {
+    removeElementsAttribute: function (array, attribute) {
+      array.forEach(function (elem) {
         elem.removeAttribute(attribute);
       });
+    },
+
+    checkValue: function (element, val) {
+      return element.value === val;
     },
 
     checkRequiredField: function (element, event) {
@@ -110,18 +106,14 @@
       }
     },
 
-    fieldReset: function (field) {
-      field.value = '';
-    },
-
-    fieldResetToValue: function (field, val) {
-      field.value = val;
+    fieldReset: function (field, val) {
+      field.value = val || '';
     },
 
     checkboxListReset: function (array) {
-      for (var i = 0; i < array.length; i++) {
-        array[i].checked = false;
-      }
+      array.forEach(function (it) {
+        it.checked = false;
+      });
     },
 
     findVisibleElements: function (array) {

@@ -93,6 +93,7 @@
   // Filters
 
   var filtersPanel = document.querySelector('.map__filters-container');
+  var mapFilters = Array.from(filtersPanel.querySelectorAll('.map__filter'));
   var houseTypeFilter = filtersPanel.querySelector('#housing-type');
   var housePriceFilter = filtersPanel.querySelector('#housing-price');
   var roomsNumberFilter = filtersPanel.querySelector('#housing-rooms');
@@ -102,9 +103,13 @@
   houseTypeFilter.addEventListener('change', function () {
     var usersPinsArr = Array.from(document.querySelectorAll('.map__pin--user'));
     var usersCardsArr = Array.from(document.querySelectorAll('.popup'));
+    console.log(window.lib.checkValue(housePriceFilter, 'any'));
     switch (houseTypeFilter.value) {
       case 'flat':
         var flatUsersId = window.lib.filterArrayByValue(usersCardsArr, 'h4', 'Квартира');
+        // if (window.lib.checkFieldsValue(mapFilters, 'any') {
+
+        // }
         window.lib.compareArraysById(usersPinsArr, flatUsersId);
         break;
 
@@ -119,10 +124,7 @@
         break;
 
       case 'any':
-        var visiblePins = usersPinsArr.filter(function (pin) {
-          var visiblePin = !pin.classList.contains('hidden');
-          return visiblePin;
-        });
+        var visiblePins = window.lib.findVisibleElements(usersPinsArr);
         window.lib.removeClassFromRandom(usersPinsArr, 'hidden', (maxPinsNumber - visiblePins.length));
         break;
     }
