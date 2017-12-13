@@ -46,16 +46,16 @@
 
     // Add event listeners
 
-    (function () {
-      var cardClose = null;
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', buttonsClickHandler);
+    buttons.forEach(function (button) {
+      button.addEventListener('click', buttonsClickHandler);
+    });
 
-        cardClose = cards[i].querySelector('.popup__close');
-        cardClose.addEventListener('click', cardCloseClickHandler);
-        cardClose.addEventListener('keydown', cardEnterCloseHandler);
-      }
-    })();
+    var cardClose;
+    cards.forEach(function (card) {
+      cardClose = card.querySelector('.popup__close');
+      cardClose.addEventListener('click', cardCloseClickHandler);
+      cardClose.addEventListener('keydown', cardEnterCloseHandler);
+    });
   };
 
 })();

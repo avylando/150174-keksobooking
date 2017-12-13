@@ -13,23 +13,20 @@
 
     var fragmentPins = document.createDocumentFragment();
     var fragmentCards = document.createDocumentFragment();
+    var pin;
+    var card;
 
     for (var i = 0; i < ads.length; i++) {
-      fragmentPins.appendChild(window.pin.generate(ads[i]));
-      fragmentCards.appendChild(window.card.generate(ads[i]));
+      pin = window.pin.generate(ads[i]);
+      card = window.card.generate(ads[i]);
+
+      pin.setAttribute('id', 'user' + (i + 1));
+      card.setAttribute('id', 'user' + (i + 1));
+
+      fragmentPins.appendChild(pin);
+      fragmentCards.appendChild(card);
     }
 
-    // Hide elements
-
-    var usersPins = fragmentPins.querySelectorAll('.map__pin--users');
-    var usersCards = fragmentCards.querySelectorAll('.popup');
-
-    window.lib.addClassToAll(usersPins, 'hidden');
-    window.lib.addClassToAll(usersCards, 'hidden');
-
-    // Add functions show/hide card
-
-    window.showCard(usersPins, usersCards);
 
     // Add fragments into DOM
 

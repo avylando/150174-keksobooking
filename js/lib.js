@@ -8,7 +8,8 @@
     ENTER_KEYCODE: 13,
 
     getRandomValue: function (array) {
-      return array[Math.floor(Math.random() * array.length)];
+      var randomIndex = Math.floor(Math.random() * array.length);
+      return array[randomIndex];
     },
 
     getValueInRange: function (min, max) {
@@ -62,8 +63,15 @@
     },
 
     addClassToAll: function (array, className) {
-      for (var i = 0; i < array.length; i++) {
-        array[i].classList.add(className);
+      array.forEach(function (elem) {
+        elem.classList.add(className);
+      });
+    },
+
+    addClassToRandom: function (array, className, number) {
+      for (var i = 0; i < number; i++) {
+        var randomIndex = Math.floor(Math.random() * array.length);
+        array[randomIndex].classList.add(className);
       }
     },
 
@@ -73,10 +81,26 @@
       }
     },
 
-    removeElementsAttribute: function (arr, attribute) {
-      for (var j = 0; j < arr.length; j++) {
-        arr[j].removeAttribute(attribute);
+    removeClassFromRandom: function (array, className, number) {
+      for (var i = 0; i < number; i++) {
+        if (i < array.length) {
+          var randomIndex = Math.floor(Math.random() * array.length);
+          if (array[randomIndex].classList.contains(className)) {
+            array[randomIndex].classList.remove(className);
+          } else {
+            --i;
+          }
+        } else {
+          break;
+        }
+
       }
+    },
+
+    removeElementsAttribute: function (arr, attribute) {
+      arr.forEach(function (elem) {
+        elem.removeAttribute(attribute);
+      });
     },
 
     checkRequiredField: function (element, event) {
@@ -98,6 +122,46 @@
       for (var i = 0; i < array.length; i++) {
         array[i].checked = false;
       }
+    },
+
+    findVisibleElements: function (array) {
+      var visibleArray = array.filter(function (elem) {
+        var visibleElement = !elem.classList.contains('hidden');
+        return visibleElement;
+      });
+      return visibleArray;
+    },
+
+    filterArrayByValue: function (array, option, value) {
+      return array.filter(function (it) {
+        return it.querySelector(option).textContent === value;
+      }).map(function (it) {
+        return it.getAttribute('id');
+      });
+    },
+
+    filterArrayByRange: function (array, option, min, max) {
+      return array.filter(function (it) {
+        var value = parseInt(it.querySelector(option).textContent, 10);
+        return value > min && value <= max;
+      }).map(function (it) {
+        return it.getAttribute('id');
+      });
+    },
+
+    compareArraysById: function (inputArr, filteredArr) {
+      var visibleArray = window.lib.findVisibleElements(inputArr);
+      console.log(visibleArray);
+      inputArr.forEach(function (it) {
+        it.classList.add('hidden');
+        var itId = it.getAttribute('id');
+        filteredArr.map(function (item) {
+          if (itId === item) {
+            it.classList.remove('hidden');
+            visibleArray.push(it);
+          }
+        });
+      });
     }
   };
 })();

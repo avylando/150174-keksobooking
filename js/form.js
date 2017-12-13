@@ -81,11 +81,10 @@
 
   var postNewAd = function () {
     window.lib.fieldReset(inputTitle);
-    window.lib.fieldReset(inputAddress);
     window.lib.fieldResetToValue(inputTypeHouse, 'flat');
     window.lib.fieldResetToValue(inputPrice, '1000');
     window.lib.fieldResetToValue(selectTimeIn, '12:00');
-    window.lib.fieldResetToValue(selectTimeIn, '12:00');
+    window.lib.fieldResetToValue(selectTimeOut, '12:00');
     window.lib.fieldResetToValue(inputRoomNumber, '1');
     window.lib.fieldResetToValue(inputCapacity, '3');
     window.lib.fieldReset(textareaDescription);
