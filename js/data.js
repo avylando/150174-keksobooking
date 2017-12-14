@@ -4,6 +4,9 @@
 (function () {
 
   var similarAds = [];
+  var map = document.querySelector('.map');
+  var pinsMap = document.querySelector('.map__pins');
+  var filtersContainer = map.querySelector('.map__filters-container');
 
   // Load users ads
 
@@ -13,32 +16,22 @@
 
     // Append ads to fragments
 
-    var fragmentPins = document.createDocumentFragment();
-    var fragmentCards = document.createDocumentFragment();
-    var pin;
-    var card;
     var maxAds = 5;
 
-    for (var i = 0; i < maxAds; i++) {
-      pin = window.pin.generate(similarAds[i]);
-      card = window.card.generate(similarAds[i]);
+    window.fillMap = function () {
+      for (var i = 0; i < maxAds; i++) {
+        var pin = window.pin.generate(similarAds[i]);
+        var card = window.card.generate(similarAds[i]);
 
-      pin.setAttribute('id', 'user' + (i + 1));
-      card.setAttribute('id', 'user' + (i + 1));
+        window.lib.setElementId(pin, i + 1);
+        window.lib.setElementId(card, i + 1);
 
-      fragmentPins.appendChild(pin);
-      fragmentCards.appendChild(card);
-    }
+        window.showCard(pin, card);
 
-
-    // Add fragments into DOM
-
-    var map = document.querySelector('.map');
-    window.tokyoPinMap = document.querySelector('.map__pins');
-    var filtersContainer = map.querySelector('.map__filters-container');
-
-    window.tokyoPinMap.appendChild(fragmentPins);
-    map.insertBefore(fragmentCards, filtersContainer);
+        pinsMap.appendChild(pin);
+        map.insertBefore(card, filtersContainer);
+      }
+    };
 
   };
 
@@ -69,8 +62,10 @@
 
   window.backend.load(loadDataFromServer, loadError);
 
-  var filtersContainer = document.querySelector('.map__filters-container');
-  var usersPins = Array.from(filtersContainer.querySelectorAll('.map__pin--user'));
+  console.log(similarAds);
+
+  // Set filters
+
   var houseTypeFilter = filtersContainer.querySelector('#housing-type');
   var housePriceFilter = filtersContainer.querySelector('#housing-price');
   var roomsNumberFilter = filtersContainer.querySelector('#housing-rooms');
@@ -78,13 +73,16 @@
   var featuresFilter = filtersContainer.querySelector('#housing-features');
 
   var checkPriceRange = function (element) {
+    console.log(element.offer.price);
     switch (housePriceFilter.value) {
       case 'low':
-        return element.offer.price < 1000;
+        return element.offer.price < 10000;
       case 'middle':
-        return element.offer.price >= 1000 && element.offer.price <= 10000;
+        return element.offer.price >= 10000 && element.offer.price <= 50000;
       case 'high':
-        return element.offer.price > 10000;
+        return element.offer.price > 50000;
+      case 'any':
+        return element;
     }
     return false;
   };
@@ -92,21 +90,37 @@
   var filterByValues = function (element) {
     return (houseTypeFilter.value === 'any' || element.offer.type === houseTypeFilter.value)
       && checkPriceRange(element)
-      && (roomsNumberFilter.value === 'any' || element.offer.rooms === roomsNumberFilter.value)
-      && (guestsNumberFilter.value === 'any' || element.offer.guests === guestsNumberFilter.value);
+      && (roomsNumberFilter.value === 'any' || element.offer.rooms === +roomsNumberFilter.value)
+      && (guestsNumberFilter.value === 'any' || element.offer.guests === +guestsNumberFilter.value);
   };
 
   var clearMap = function () {
     var userPins = document.querySelectorAll('.map__pin--user');
+    var userCards = document.querySelectorAll('.popup');
 
-    userPins.forEach(function (it) {
-      window.tokyoPinMap.removeChild(it);
-    });
+    for (var i = 0; i < userPins.length; i++) {
+      var pin = userPins[i];
+      var card = userCards[i];
+      pinsMap.removeChild(pin);
+      map.removeChild(card);
+    }
   };
 
   filtersContainer.addEventListener('change', function () {
+
     clearMap();
-    similarAds.filter(filterByValues).forEach(window.pin.generate);
+    var filteredPins = similarAds.filter(filterByValues).map(window.pin.generate);
+    var filteredCards = similarAds.filter(filterByValues).map(window.card.generate);
+
+    for (var i = 0; i < filteredPins.length; i++) {
+      var pin = filteredPins[i];
+      var card = filteredCards[i];
+      window.lib.setElementId(pin, i + 1);
+      window.lib.setElementId(card, i + 1);
+      window.showCard(pin, card);
+      pinsMap.appendChild(pin);
+      map.insertBefore(card, filtersContainer);
+    }
   });
 
 })();

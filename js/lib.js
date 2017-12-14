@@ -89,6 +89,10 @@
       }
     },
 
+    setElementId: function (element, number) {
+      element.setAttribute('id', 'user' + number);
+    },
+
     removeElementsAttribute: function (array, attribute) {
       array.forEach(function (elem) {
         elem.removeAttribute(attribute);
@@ -128,70 +132,6 @@
       }).map(function (it) {
         return it.getAttribute('id');
       });
-    },
-
-    // checkElementId: function (array, element) {
-    //   array.map(function (it) {
-    //     var elementId = element.getAttribute('id');
-    //     if (elementId === it) {
-    //       element.filtered = true;
-    //       if (element.classList.contains('hidden')) {
-    //         element.classList.remove('hidden');
-    //       }
-    //     } else if (elementId !== it && element.filtered !== true) {
-    //       element.filtered = false;
-    //       if (!element.classList.contains('hidden')) {
-    //         element.classList.add('hidden');
-    //       }
-    //     }
-    //   });
-    // },
-
-    checkElementId: function (array, element) {
-      return array.some(function (it) {
-        return it === element;
-      });
-    },
-
-    addFilteredProperty: function (array) {
-      array.map(function (it) {
-        it.filtered = null;
-      });
-    },
-
-    compareArraysById: function (inputArr, filteredArr) {
-
-      var output = inputArr.filter(function (it) {
-        // it.classList.add('hidden');
-        var itId = it.getAttribute('id');
-        // var checkResult = filteredArr.some(function (item) {
-        //   return item === itId;
-        // });
-        // console.log(checkResult);
-        if (window.lib.checkElementId(filteredArr, itId)) {
-          if (it.filtered === false) {
-            return false;
-          } else {
-            it.filtered = true;
-            if (it.classList.contains('hidden')) {
-              it.classList.remove('hidden');
-            }
-            return it;
-          }
-        } else {
-          it.filtered = false;
-          if (!it.classList.contains('hidden')) {
-            it.classList.add('hidden');
-          }
-          return false;
-        }
-      });
-      console.dir(output);
-    },
-
-    generateFilteredArray: function (array) {
-      array = window.lib.compareArraysById();
-      return array;
     }
   };
 })();

@@ -52,14 +52,11 @@
       // Map and form activation
 
       if (map.classList.contains('map--faded')) {
-        var usersPins = document.querySelectorAll('.map__pin--user');
-        var usersCards = document.querySelectorAll('.popup');
-
         map.classList.remove('map--faded');
         noticeForm.classList.remove('notice__form--disabled');
         window.lib.removeElementsAttribute(noticeFieldsets, 'disabled');
-        window.lib.removeClassFromRandom(usersPins, 'hidden', maxPinsNumber);
-        window.showCard(usersPins, usersCards);
+        // window.lib.removeClassFromRandom(usersPins, 'hidden', maxPinsNumber);
+        window.fillMap();
       }
 
 
