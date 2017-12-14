@@ -95,10 +95,6 @@
       });
     },
 
-    checkValue: function (element, val) {
-      return element.value === val;
-    },
-
     checkRequiredField: function (element, event) {
       if (!element.value) {
         event.preventDefault();
@@ -116,18 +112,11 @@
       });
     },
 
-    findVisibleElements: function (array) {
-      var visibleArray = array.filter(function (elem) {
-        var visibleElement = !elem.classList.contains('hidden');
-        return visibleElement;
-      });
-      return visibleArray;
-    },
-
     filterArrayByValue: function (array, option, value) {
       return array.filter(function (it) {
         return it.querySelector(option).textContent === value;
       }).map(function (it) {
+        it.filtered = true;
         return it.getAttribute('id');
       });
     },
@@ -141,19 +130,68 @@
       });
     },
 
-    compareArraysById: function (inputArr, filteredArr) {
-      var visibleArray = window.lib.findVisibleElements(inputArr);
-      console.log(visibleArray);
-      inputArr.forEach(function (it) {
-        it.classList.add('hidden');
-        var itId = it.getAttribute('id');
-        filteredArr.map(function (item) {
-          if (itId === item) {
-            it.classList.remove('hidden');
-            visibleArray.push(it);
-          }
-        });
+    // checkElementId: function (array, element) {
+    //   array.map(function (it) {
+    //     var elementId = element.getAttribute('id');
+    //     if (elementId === it) {
+    //       element.filtered = true;
+    //       if (element.classList.contains('hidden')) {
+    //         element.classList.remove('hidden');
+    //       }
+    //     } else if (elementId !== it && element.filtered !== true) {
+    //       element.filtered = false;
+    //       if (!element.classList.contains('hidden')) {
+    //         element.classList.add('hidden');
+    //       }
+    //     }
+    //   });
+    // },
+
+    checkElementId: function (array, element) {
+      return array.some(function (it) {
+        return it === element;
       });
+    },
+
+    addFilteredProperty: function (array) {
+      array.map(function (it) {
+        it.filtered = null;
+      });
+    },
+
+    compareArraysById: function (inputArr, filteredArr) {
+
+      var output = inputArr.filter(function (it) {
+        // it.classList.add('hidden');
+        var itId = it.getAttribute('id');
+        // var checkResult = filteredArr.some(function (item) {
+        //   return item === itId;
+        // });
+        // console.log(checkResult);
+        if (window.lib.checkElementId(filteredArr, itId)) {
+          if (it.filtered === false) {
+            return false;
+          } else {
+            it.filtered = true;
+            if (it.classList.contains('hidden')) {
+              it.classList.remove('hidden');
+            }
+            return it;
+          }
+        } else {
+          it.filtered = false;
+          if (!it.classList.contains('hidden')) {
+            it.classList.add('hidden');
+          }
+          return false;
+        }
+      });
+      console.dir(output);
+    },
+
+    generateFilteredArray: function (array) {
+      array = window.lib.compareArraysById();
+      return array;
     }
   };
 })();

@@ -90,71 +90,93 @@
     mainPin.addEventListener('mouseup', mainPinMouseUpHandler);
   });
 
-  // Filters
+  // // Filters
 
-  var filtersPanel = document.querySelector('.map__filters-container');
-  var mapFilters = Array.from(filtersPanel.querySelectorAll('.map__filter'));
-  var houseTypeFilter = filtersPanel.querySelector('#housing-type');
-  var housePriceFilter = filtersPanel.querySelector('#housing-price');
-  var roomsNumberFilter = filtersPanel.querySelector('#housing-rooms');
-  var guestsNumberFilter = filtersPanel.querySelector('#housing-guests');
-  var featuresFilter = filtersPanel.querySelector('#housing-features');
+  // var filtersPanel = document.querySelector('.map__filters-container');
+  // var mapFilters = Array.from(filtersPanel.querySelectorAll('.map__filter'));
+  // var houseTypeFilter = filtersPanel.querySelector('#housing-type');
+  // var housePriceFilter = filtersPanel.querySelector('#housing-price');
+  // var roomsNumberFilter = filtersPanel.querySelector('#housing-rooms');
+  // var guestsNumberFilter = filtersPanel.querySelector('#housing-guests');
+  // var featuresFilter = filtersPanel.querySelector('#housing-features');
 
-  houseTypeFilter.addEventListener('change', function () {
-    var usersPinsArr = Array.from(document.querySelectorAll('.map__pin--user'));
-    var usersCardsArr = Array.from(document.querySelectorAll('.popup'));
-    console.log(window.lib.checkValue(housePriceFilter, 'any'));
-    switch (houseTypeFilter.value) {
-      case 'flat':
-        var flatUsersId = window.lib.filterArrayByValue(usersCardsArr, 'h4', 'Квартира');
-        // if (window.lib.checkFieldsValue(mapFilters, 'any') {
+  // var checkValue = function (element, val) {
+  //   return element.value === val;
+  // };
 
-        // }
-        window.lib.compareArraysById(usersPinsArr, flatUsersId);
-        break;
+  // var findVisibleElements = function (array) {
+  //   var visibleArray = array.filter(function (elem) {
+  //     var visibleElement = !elem.classList.contains('hidden');
+  //     return visibleElement;
+  //   });
+  //   return visibleArray;
+  // };
 
-      case 'house':
-        var houseUsersId = window.lib.filterArrayByValue(usersCardsArr, 'h4', 'Дом');
-        window.lib.compareArraysById(usersPinsArr, houseUsersId);
-        break;
+  // var getNodesClickHandler = function () {
+  //   window.usersPinsArr = Array.from(document.querySelectorAll('.map__pin--user'));
+  //   window.usersCardsArr = Array.from(document.querySelectorAll('.popup'));
+  //   window.lib.addFilteredProperty(window.usersPinsArr);
+  //   window.lib.addFilteredProperty(window.usersCardsArr);
+  //   filtersPanel.removeEventListener('click', getNodesClickHandler);
+  // };
 
-      case 'bungalo':
-        var bungaloUsersId = window.lib.filterArrayByValue(usersCardsArr, 'h4', 'Лачуга');
-        window.lib.compareArraysById(usersPinsArr, bungaloUsersId);
-        break;
+  // filtersPanel.addEventListener('click', getNodesClickHandler);
 
-      case 'any':
-        var visiblePins = window.lib.findVisibleElements(usersPinsArr);
-        window.lib.removeClassFromRandom(usersPinsArr, 'hidden', (maxPinsNumber - visiblePins.length));
-        break;
-    }
-  });
+  // // var filteredArr;
+  // houseTypeFilter.addEventListener('change', function () {
+  //   // var usersPinsArr = Array.from(document.querySelectorAll('.map__pin--user'));
+  //   // var usersCardsArr = Array.from(document.querySelectorAll('.popup'));
+  //   var visiblePins;
 
-  housePriceFilter.addEventListener('change', function () {
-    var usersPinsArr = Array.from(document.querySelectorAll('.map__pin--user'));
-    var usersCardsArr = Array.from(document.querySelectorAll('.popup'));
-    switch (housePriceFilter.value) {
-      case 'middle':
-        var middlePriceUsersId = window.lib.filterArrayByRange(usersCardsArr, '.popup__price', 10000, 50000);
-        window.lib.compareArraysById(usersPinsArr, middlePriceUsersId);
-        break;
+  //   switch (houseTypeFilter.value) {
+  //     case 'flat':
+  //       var flatUsersId = window.lib.filterArrayByValue(window.usersCardsArr, 'h4', 'Квартира');
+  //       window.lib.compareArraysById(window.usersPinsArr, flatUsersId);
+  //       break;
 
-      case 'low':
-        var lowPriceUsersId = window.lib.filterArrayByRange(usersCardsArr, '.popup__price', 0, 10000);
-        window.lib.compareArraysById(usersPinsArr, lowPriceUsersId);
-        break;
+  //     case 'house':
+  //       var houseUsersId = window.lib.filterArrayByValue(window.usersCardsArr, 'h4', 'Дом');
+  //       window.lib.compareArraysById(window.usersPinsArr, houseUsersId);
+  //       break;
 
-      case 'high':
-        var highPriceUsersId = window.lib.filterArrayByRange(usersCardsArr, '.popup__price', 50000, 9999999);
-        window.lib.compareArraysById(usersPinsArr, highPriceUsersId);
-        break;
+  //     case 'bungalo':
+  //       var bungaloUsersId = window.lib.filterArrayByValue(window.usersCardsArr, 'h4', 'Лачуга');
+  //       window.lib.compareArraysById(window.usersPinsArr, bungaloUsersId);
+  //       break;
 
-      case 'any':
-        var visiblePins = window.lib.findVisibleElements(usersPinsArr);
-        window.lib.removeClassFromRandom(usersPinsArr, 'hidden', (maxPinsNumber - visiblePins.length));
-        break;
-    }
-  });
+  //     case 'any':
+  //       visiblePins = findVisibleElements(window.usersPinsArr);
+  //       window.lib.removeClassFromRandom(window.usersPinsArr, 'hidden', (maxPinsNumber - visiblePins.length));
+  //       break;
+  //   }
+  // });
+
+  // housePriceFilter.addEventListener('change', function () {
+  //   // var usersPinsArr = Array.from(document.querySelectorAll('.map__pin--user'));
+  //   // var usersCardsArr = Array.from(document.querySelectorAll('.popup'));
+  //   var visiblePins;
+  //   switch (housePriceFilter.value) {
+  //     case 'middle':
+  //       var middlePriceUsersId = window.lib.filterArrayByRange(window.usersCardsArr, '.popup__price', 10000, 50000);
+  //       window.lib.compareArraysById(window.usersPinsArr, middlePriceUsersId);
+  //       break;
+
+  //     case 'low':
+  //       var lowPriceUsersId = window.lib.filterArrayByRange(window.usersCardsArr, '.popup__price', 0, 10000);
+  //       window.lib.compareArraysById(window.usersPinsArr, lowPriceUsersId);
+  //       break;
+
+  //     case 'high':
+  //       var highPriceUsersId = window.lib.filterArrayByRange(window.usersCardsArr, '.popup__price', 50000, 9999999);
+  //       window.lib.compareArraysById(window.usersPinsArr, highPriceUsersId);
+  //       break;
+
+  //     case 'any':
+  //       visiblePins = findVisibleElements(window.usersPinsArr);
+  //       window.lib.removeClassFromRandom(window.usersPinsArr, 'hidden', (maxPinsNumber - visiblePins.length));
+  //       break;
+  //   }
+  // });
 
 })();
 

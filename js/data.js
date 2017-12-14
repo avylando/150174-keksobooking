@@ -3,11 +3,13 @@
 
 (function () {
 
+  var similarAds = [];
+
   // Load users ads
 
   var loadDataFromServer = function (data) {
 
-    var ads = data;
+    similarAds = data;
 
     // Append ads to fragments
 
@@ -15,10 +17,11 @@
     var fragmentCards = document.createDocumentFragment();
     var pin;
     var card;
+    var maxAds = 5;
 
-    for (var i = 0; i < ads.length; i++) {
-      pin = window.pin.generate(ads[i]);
-      card = window.card.generate(ads[i]);
+    for (var i = 0; i < maxAds; i++) {
+      pin = window.pin.generate(similarAds[i]);
+      card = window.card.generate(similarAds[i]);
 
       pin.setAttribute('id', 'user' + (i + 1));
       card.setAttribute('id', 'user' + (i + 1));
@@ -31,10 +34,10 @@
     // Add fragments into DOM
 
     var map = document.querySelector('.map');
-    var tokyoPinMap = document.querySelector('.map__pins');
+    window.tokyoPinMap = document.querySelector('.map__pins');
     var filtersContainer = map.querySelector('.map__filters-container');
 
-    tokyoPinMap.appendChild(fragmentPins);
+    window.tokyoPinMap.appendChild(fragmentPins);
     map.insertBefore(fragmentCards, filtersContainer);
 
   };
@@ -65,6 +68,46 @@
   };
 
   window.backend.load(loadDataFromServer, loadError);
+
+  var filtersContainer = document.querySelector('.map__filters-container');
+  var usersPins = Array.from(filtersContainer.querySelectorAll('.map__pin--user'));
+  var houseTypeFilter = filtersContainer.querySelector('#housing-type');
+  var housePriceFilter = filtersContainer.querySelector('#housing-price');
+  var roomsNumberFilter = filtersContainer.querySelector('#housing-rooms');
+  var guestsNumberFilter = filtersContainer.querySelector('#housing-guests');
+  var featuresFilter = filtersContainer.querySelector('#housing-features');
+
+  var checkPriceRange = function (element) {
+    switch (housePriceFilter.value) {
+      case 'low':
+        return element.offer.price < 1000;
+      case 'middle':
+        return element.offer.price >= 1000 && element.offer.price <= 10000;
+      case 'high':
+        return element.offer.price > 10000;
+    }
+    return false;
+  };
+
+  var filterByValues = function (element) {
+    return (houseTypeFilter.value === 'any' || element.offer.type === houseTypeFilter.value)
+      && checkPriceRange(element)
+      && (roomsNumberFilter.value === 'any' || element.offer.rooms === roomsNumberFilter.value)
+      && (guestsNumberFilter.value === 'any' || element.offer.guests === guestsNumberFilter.value);
+  };
+
+  var clearMap = function () {
+    var userPins = document.querySelectorAll('.map__pin--user');
+
+    userPins.forEach(function (it) {
+      window.tokyoPinMap.removeChild(it);
+    });
+  };
+
+  filtersContainer.addEventListener('change', function () {
+    clearMap();
+    similarAds.filter(filterByValues).forEach(window.pin.generate);
+  });
 
 })();
 
