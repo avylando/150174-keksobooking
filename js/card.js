@@ -24,9 +24,10 @@
   var addFeatureItem = function (array) {
     var featuresListElements = [];
 
-    for (var i = 0; i < array.length; i++) {
-      featuresListElements[i] = '<li></li>';
-    }
+    array.forEach(function (it) {
+      it = '<li></li>';
+      featuresListElements.push(it);
+    });
 
     var featuresList = featuresListElements.join(' ');
     return featuresList;

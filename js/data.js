@@ -3,6 +3,8 @@
 
 (function () {
 
+  // Variables
+
   var similarAds = [];
   var map = document.querySelector('.map');
   var pinsMap = document.querySelector('.map__pins');
@@ -11,28 +13,7 @@
   // Load users ads
 
   var loadDataFromServer = function (data) {
-
     similarAds = data;
-
-    // Append ads to fragments
-
-    var maxAds = 5;
-
-    window.fillMap = function () {
-      for (var i = 0; i < maxAds; i++) {
-        var pin = window.pin.generate(similarAds[i]);
-        var card = window.card.generate(similarAds[i]);
-
-        window.lib.setElementId(pin, i + 1);
-        window.lib.setElementId(card, i + 1);
-
-        window.showCard(pin, card);
-
-        pinsMap.appendChild(pin);
-        map.insertBefore(card, filtersContainer);
-      }
-    };
-
   };
 
   var loadError = function (errorMessage) {
@@ -62,7 +43,6 @@
 
   window.backend.load(loadDataFromServer, loadError);
 
-  console.log(similarAds);
 
   // Set filters
 
@@ -73,25 +53,46 @@
   var featuresFilter = filtersContainer.querySelector('#housing-features');
 
   var checkPriceRange = function (element) {
-    console.log(element.offer.price);
+    var lowPrice = 10000;
+    var highPrice = 50000;
     switch (housePriceFilter.value) {
       case 'low':
-        return element.offer.price < 10000;
+        return element.offer.price < lowPrice;
       case 'middle':
-        return element.offer.price >= 10000 && element.offer.price <= 50000;
+        return element.offer.price >= lowPrice && element.offer.price <= highPrice;
       case 'high':
-        return element.offer.price > 50000;
+        return element.offer.price > highPrice;
       case 'any':
         return element;
     }
     return false;
   };
 
+  var features = Array.from(featuresFilter.querySelectorAll('input[name="features"]'));
+  var checkFeatureOptions = function (element) {
+
+    var checkedFeatures = features.filter(function (input) {
+      return input.checked;
+    });
+
+    var checkedFeaturesValues = checkedFeatures.map(function (inputChecked) {
+      return inputChecked.value;
+    });
+
+    var isContain = function (it) {
+      return element.indexOf(it) !== -1;
+    };
+
+    return checkedFeatures === 'undefined' || checkedFeaturesValues.every(isContain);
+  };
+
+
   var filterByValues = function (element) {
     return (houseTypeFilter.value === 'any' || element.offer.type === houseTypeFilter.value)
       && checkPriceRange(element)
       && (roomsNumberFilter.value === 'any' || element.offer.rooms === +roomsNumberFilter.value)
-      && (guestsNumberFilter.value === 'any' || element.offer.guests === +guestsNumberFilter.value);
+      && (guestsNumberFilter.value === 'any' || element.offer.guests === +guestsNumberFilter.value)
+      && checkFeatureOptions(element.offer.features);
   };
 
   var clearMap = function () {
@@ -101,27 +102,45 @@
     for (var i = 0; i < userPins.length; i++) {
       var pin = userPins[i];
       var card = userCards[i];
+
       pinsMap.removeChild(pin);
       map.removeChild(card);
     }
   };
 
-  filtersContainer.addEventListener('change', function () {
-
+  var updateMap = function () {
     clearMap();
-    var filteredPins = similarAds.filter(filterByValues).map(window.pin.generate);
-    var filteredCards = similarAds.filter(filterByValues).map(window.card.generate);
+    var filteredAds = similarAds.filter(filterByValues);
+    window.data.fillMap(filteredAds);
+  };
 
-    for (var i = 0; i < filteredPins.length; i++) {
-      var pin = filteredPins[i];
-      var card = filteredCards[i];
-      window.lib.setElementId(pin, i + 1);
-      window.lib.setElementId(card, i + 1);
-      window.showCard(pin, card);
-      pinsMap.appendChild(pin);
-      map.insertBefore(card, filtersContainer);
-    }
+  filtersContainer.addEventListener('change', function () {
+    window.debounce(updateMap, 500);
   });
 
-})();
+  var setElementId = function (element, number) {
+    element.setAttribute('id', 'user' + number);
+  };
 
+  window.data = {
+    fillMap: function (array) {
+      var maxAds = 5;
+      array = array || similarAds;
+      array = array.slice(0, maxAds);
+
+      for (var i = 0; i < array.length; i++) {
+        var pin = window.pin.generate(array[i]);
+        var card = window.card.generate(array[i]);
+
+        setElementId(pin, i + 1);
+        setElementId(card, i + 1);
+
+        window.showCard(pin, card);
+
+        pinsMap.appendChild(pin);
+        map.insertBefore(card, filtersContainer);
+      }
+    }
+  };
+
+})();

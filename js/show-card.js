@@ -10,12 +10,15 @@
     var userCards;
     var buttonId = button.getAttribute('id');
     var cardId = card.getAttribute('id');
+    var cardClose = card.querySelector('.popup__close');
     var buttonClickHandler = function (evt) {
 
       if (evt.currentTarget === button || evt.keyCode === window.lib.ENTER_KEYCODE) {
         button.classList.add('map__pin--active');
         if (buttonId === cardId) {
           card.classList.remove('hidden');
+          cardClose.addEventListener('click', cardCloseClickHandler);
+          cardClose.addEventListener('keydown', cardEnterCloseHandler);
           document.addEventListener('keydown', cardEscCloseHandler);
         }
       }
@@ -39,6 +42,8 @@
       if (!window.lib.findClass(card, 'hidden') && window.lib.findClass(button, 'map__pin--active')) {
         card.classList.add('hidden');
         button.classList.remove('map__pin--active');
+        cardClose.removeEventListener('click', cardCloseClickHandler);
+        cardClose.removeEventListener('keydown', cardEnterCloseHandler);
         document.removeEventListener('keydown', cardEscCloseHandler);
       }
     };
@@ -55,13 +60,7 @@
       }
     };
 
-    // Add event listeners
-
     button.addEventListener('click', buttonClickHandler);
-
-    var cardClose = card.querySelector('.popup__close');
-    cardClose.addEventListener('click', cardCloseClickHandler);
-    cardClose.addEventListener('keydown', cardEnterCloseHandler);
   };
 
 })();
