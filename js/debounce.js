@@ -2,14 +2,15 @@
 
 (function () {
 
-  var lastTimeout;
   window.debounce = function (func, interval) {
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
-    }
+    var lastTimeout = null;
 
-    lastTimeout = window.setTimeout(function () {
-      func();
-    }, interval);
+    return function () {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+
+      lastTimeout = window.setTimeout(func, interval);
+    };
   };
 })();

@@ -114,9 +114,11 @@
     window.data.fillMap(filteredAds);
   };
 
-  filtersContainer.addEventListener('change', function () {
-    window.debounce(updateMap, 500);
-  });
+  // Add debounce
+
+  var filtersChangeHandler = window.debounce(updateMap, 500);
+
+  filtersContainer.addEventListener('change', filtersChangeHandler);
 
   var setElementId = function (element, number) {
     element.setAttribute('id', 'user' + number);
