@@ -6,17 +6,12 @@
     var lastTimeout = null;
 
     return function () {
-      var args = arguments;
-      var onUpdate = function () {
-        func.apply(window, args);
-        lastTimeout = null;
-      };
 
       if (lastTimeout) {
-        clearTimeout(lastTimeout);
+        window.clearTimeout(lastTimeout);
       }
 
-      lastTimeout = setTimeout(onUpdate, interval);
+      lastTimeout = window.setTimeout(func, interval);
     };
   };
 })();
