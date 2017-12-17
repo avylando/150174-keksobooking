@@ -70,7 +70,6 @@
 
   var features = Array.from(featuresFilter.querySelectorAll('input[name="features"]'));
   var checkFeatureOptions = function (element) {
-
     var checkedFeatures = features.filter(function (input) {
       return input.checked;
     });
@@ -90,8 +89,8 @@
   var filterByValues = function (element) {
     return (houseTypeFilter.value === 'any' || element.offer.type === houseTypeFilter.value)
       && checkPriceRange(element)
-      && (roomsNumberFilter.value === 'any' || element.offer.rooms === +roomsNumberFilter.value)
-      && (guestsNumberFilter.value === 'any' || element.offer.guests === +guestsNumberFilter.value)
+      && (roomsNumberFilter.value === 'any' || element.offer.rooms === parseInt(roomsNumberFilter.value, 10))
+      && (guestsNumberFilter.value === 'any' || element.offer.guests === parseInt(guestsNumberFilter.value, 10))
       && checkFeatureOptions(element.offer.features);
   };
 
@@ -116,11 +115,12 @@
 
   // Add debounce
 
-  var filtersChangeHandler = window.debounce(updateMap, 500);
+  var timeoutInterval = 500;
+  var filtersChangeHandler = window.debounce(updateMap, timeoutInterval);
   filtersContainer.addEventListener('change', filtersChangeHandler);
 
 
-  var setElementId = function (element, number) {
+  var setUserId = function (element, number) {
     element.setAttribute('id', 'user' + number);
   };
 
@@ -134,8 +134,8 @@
         var pin = window.pin.generate(array[i]);
         var card = window.card.generate(array[i]);
 
-        setElementId(pin, i + 1);
-        setElementId(card, i + 1);
+        setUserId(pin, i + 1);
+        setUserId(card, i + 1);
 
         window.showCard(pin, card);
 

@@ -3,8 +3,8 @@
 
 (function () {
 
-  var pinWidth = 46;
-  var pinHeight = 64;
+  var PIN_WIDTH = 46;
+  var PIN_HEIGHT = 64;
 
   // Find pin template
 
@@ -24,13 +24,13 @@
   // Export values
 
   window.pin = {
-    width: pinWidth,
-    height: pinHeight,
+    width: PIN_WIDTH,
+    height: PIN_HEIGHT,
     generate: function (obj) {
       var pinElement = mapPinTemplate.cloneNode(true);
       pinElement.querySelector('img').src = obj.author.avatar;
-      pinElement.style.left = getPinPositionX(obj.location.x, pinWidth);
-      pinElement.style.top = getPinPositionY(obj.location.y, pinHeight);
+      pinElement.style.left = getPinPositionX(obj.location.x, PIN_WIDTH);
+      pinElement.style.top = getPinPositionY(obj.location.y, PIN_HEIGHT);
       pinElement.classList.add('map__pin--user');
 
       return pinElement;

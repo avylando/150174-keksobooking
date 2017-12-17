@@ -3,7 +3,7 @@
 
 (function () {
 
-  // Validation form
+  // Variables
 
   var form = document.querySelector('.notice__form');
 

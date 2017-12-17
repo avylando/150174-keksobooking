@@ -8,18 +8,16 @@
   var template = document.querySelector('template').content;
   var mapCard = template.querySelector('article.map__card');
 
+  // Vocabulary
 
-  // Useful functions
-
-  var getHouseType = function (value) {
-    switch (value) {
-      case 'flat': return 'Квартира';
-      case 'bungalo': return 'Лачуга';
-      case 'house': return 'Дом';
-      default: return 'Неизвестно';
-    }
+  var houseTypes = {
+    'flat': 'Квартира',
+    'bungalo': 'Лачуга',
+    'house': 'Дом',
+    'palace': 'Дворец'
   };
 
+  // Useful functions
 
   var addFeatureItem = function (array) {
     var featuresListElements = [];
@@ -55,7 +53,7 @@
       cardElement.querySelector('h3').textContent = obj.offer.title;
       cardElement.querySelector('p small').textContent = obj.offer.adress;
       cardElement.querySelector('.popup__price').innerHTML = obj.offer.price + '&#x20bd;/ночь';
-      cardElement.querySelector('h4').textContent = getHouseType(obj.offer.type);
+      cardElement.querySelector('h4').textContent = houseTypes[obj.offer.type] || 'Не указан';
       cardElement.querySelector('h4 + p').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
       cardElement.querySelector('h4 + p + p').textContent = 'Заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
       cardElement.querySelector('.popup__features').innerHTML = addFeatureItem(obj.offer.features);

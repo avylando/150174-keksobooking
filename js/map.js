@@ -16,8 +16,8 @@
 
   var mainPinWidth = 64;
   var mainPinHeight = 80;
-  var minY = 100;
-  var maxY = 500;
+  var MIN_Y_COORD = 100;
+  var MAX_Y_COORD = 500;
   var pageWidth;
   var bodyWidth;
 
@@ -38,10 +38,10 @@
       mainPin.style.top = evt.pageY + 'px';
 
       // Set vertical limits
-      if (evt.pageY < minY) {
-        mainPin.style.top = minY + 'px';
-      } else if (evt.pageY > maxY) {
-        mainPin.style.top = maxY + 'px';
+      if (evt.pageY < MIN_Y_COORD) {
+        mainPin.style.top = MIN_Y_COORD + 'px';
+      } else if (evt.pageY > MAX_Y_COORD) {
+        mainPin.style.top = MAX_Y_COORD + 'px';
       }
     };
 
@@ -53,7 +53,7 @@
       if (map.classList.contains('map--faded')) {
         map.classList.remove('map--faded');
         noticeForm.classList.remove('notice__form--disabled');
-        window.lib.removeElementsAttribute(noticeFieldsets, 'disabled');
+        window.utils.removeElementsAttribute(noticeFieldsets, 'disabled');
         window.data.fillMap();
       }
 
