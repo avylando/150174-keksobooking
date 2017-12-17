@@ -18,6 +18,8 @@
   var mainPinHeight = 80;
   var minY = 100;
   var maxY = 500;
+  var pageWidth;
+  var bodyWidth;
 
   mainPin.style.zIndex = '100';
 
@@ -28,8 +30,8 @@
       evt.preventDefault();
 
       // Compensation offset on fullscreen
-      var pageWidth = document.querySelector('html').clientWidth;
-      var bodyWidth = document.querySelector('body').clientWidth;
+      pageWidth = document.querySelector('html').clientWidth;
+      bodyWidth = document.querySelector('body').clientWidth;
       var bodyOffset = pageWidth - bodyWidth;
 
       mainPin.style.left = evt.pageX - (bodyOffset / 2) + 'px';
@@ -47,12 +49,14 @@
       evt.preventDefault();
 
       // Map and form activation
-      var usersPins = document.querySelectorAll('.map__pins .hidden');
 
-      map.classList.remove('map--faded');
-      noticeForm.classList.remove('notice__form--disabled');
-      window.lib.removeElementsAttribute(noticeFieldsets, 'disabled');
-      window.lib.removeClassFromAll(usersPins, 'hidden');
+      if (map.classList.contains('map--faded')) {
+        map.classList.remove('map--faded');
+        noticeForm.classList.remove('notice__form--disabled');
+        window.lib.removeElementsAttribute(noticeFieldsets, 'disabled');
+        window.data.fillMap();
+      }
+
 
       // Set adress value
       var leftCoord = (parseInt(mainPin.style.left, 10));
@@ -82,4 +86,3 @@
   });
 
 })();
-

@@ -4,30 +4,47 @@
 
   // Function show/hide card
 
-  window.showCard = function (buttons, cards) {
+  window.showCard = function (button, card) {
 
-    var buttonsClickHandler = function (evt) {
-      for (var i = 0; i < buttons.length; i++) {
-        if (evt.currentTarget === buttons[i] || evt.keyCode === window.lib.ENTER_KEYCODE) {
-          buttons[i].classList.add('map__pin--active');
-          cards[i].classList.remove('hidden');
+    var userPins;
+    var userCards;
+    var buttonId = button.getAttribute('id');
+    var cardId = card.getAttribute('id');
+    var cardClose = card.querySelector('.popup__close');
+    var buttonClickHandler = function (evt) {
+
+      if (evt.currentTarget === button || evt.keyCode === window.lib.ENTER_KEYCODE) {
+        button.classList.add('map__pin--active');
+        if (buttonId === cardId) {
+          card.classList.remove('hidden');
+          cardClose.addEventListener('click', cardCloseClickHandler);
+          cardClose.addEventListener('keydown', cardEnterCloseHandler);
           document.addEventListener('keydown', cardEscCloseHandler);
         }
-
-        if (evt.currentTarget !== buttons[i] && window.lib.findClass(buttons[i], 'map__pin--active')) {
-          buttons[i].classList.remove('map__pin--active');
-          cards[i].classList.add('hidden');
-        }
       }
+
+      userPins = Array.from(document.querySelectorAll('.map__pin--user'));
+      userPins.forEach(function (it) {
+        if (it.classList.contains('map__pin--active') && it !== button) {
+          it.classList.remove('map__pin--active');
+        }
+      });
+
+      userCards = Array.from(document.querySelectorAll('.popup'));
+      userCards.forEach(function (it) {
+        if (!it.classList.contains('hidden') && it !== card) {
+          it.classList.add('hidden');
+        }
+      });
     };
 
     var cardCloseClickHandler = function () {
-      for (var i = 0; i < cards.length; i++) {
-        if (!window.lib.findClass(cards[i], 'hidden') && window.lib.findClass(buttons[i], 'map__pin--active')) {
-          cards[i].classList.add('hidden');
-          buttons[i].classList.remove('map__pin--active');
-          document.removeEventListener('keydown', cardEscCloseHandler);
-        }
+      if (!window.lib.findClass(card, 'hidden') && window.lib.findClass(button, 'map__pin--active')) {
+        card.classList.add('hidden');
+        button.classList.remove('map__pin--active');
+        cardClose.removeEventListener('click', cardCloseClickHandler);
+        cardClose.removeEventListener('keydown', cardEnterCloseHandler);
+        document.removeEventListener('keydown', cardEscCloseHandler);
       }
     };
 
@@ -43,25 +60,7 @@
       }
     };
 
-
-    // Add event listeners
-
-    (function () {
-      var cardClose = null;
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', buttonsClickHandler);
-
-        cardClose = cards[i].querySelector('.popup__close');
-        cardClose.addEventListener('click', cardCloseClickHandler);
-        cardClose.addEventListener('keydown', cardEnterCloseHandler);
-
-        if (!window.lib.findClass(cards[i], 'hidden')) {
-          document.addEventListener('keydown', cardEscCloseHandler);
-        } else {
-          document.removeEventListener('keydown', cardEscCloseHandler);
-        }
-      }
-    })();
+    button.addEventListener('click', buttonClickHandler);
   };
 
 })();

@@ -7,26 +7,47 @@
 
   var form = document.querySelector('.notice__form');
 
+  var getOptionValuesInSelect = function (select) {
+    var selectOptions = select.querySelectorAll('option');
+    var optionValue = null;
+    var optionValues = [];
+
+    for (var i = 0; i < selectOptions.length; i++) {
+      optionValue = selectOptions[i].getAttribute('value');
+      optionValues[i] = optionValue;
+    }
+
+    return optionValues;
+  };
+
   // Sync timeIn and timeOut
 
   var selectTimeIn = form.querySelector('#timein');
   var selectTimeOut = form.querySelector('#timeout');
-  var timeInValues = window.lib.getOptionValuesInSelect(selectTimeIn);
-  var timeOutValues = window.lib.getOptionValuesInSelect(selectTimeOut);
+  var timeInValues = getOptionValuesInSelect(selectTimeIn);
+  var timeOutValues = getOptionValuesInSelect(selectTimeOut);
 
-  window.synchronizeFields(selectTimeIn, selectTimeOut, timeInValues, timeOutValues, window.lib.syncValues);
+  var syncValues = function (elem, val) {
+    elem.value = val;
+  };
+
+  window.synchronizeFields(selectTimeIn, selectTimeOut, timeInValues, timeOutValues, syncValues);
 
   // Sync house type and price
 
   var inputTypeHouse = form.querySelector('#type');
   var inputPrice = form.querySelector('#price');
-  var houseTypes = window.lib.getOptionValuesInSelect(inputTypeHouse);
+  var houseTypes = getOptionValuesInSelect(inputTypeHouse);
   var minPrices = ['1000', '0', '5000', '10000'];
 
   // Set default min attribute
   inputPrice.setAttribute('min', '1000');
 
-  window.synchronizeFields(inputTypeHouse, inputPrice, houseTypes, minPrices, window.lib.syncValueWithMin);
+  var syncValueWithMin = function (elem, val) {
+    elem.min = val;
+  };
+
+  window.synchronizeFields(inputTypeHouse, inputPrice, houseTypes, minPrices, syncValueWithMin);
 
 
   // Sync room number and capacity
@@ -38,29 +59,29 @@
 
 
   var disableSelectOptions = function (roomsElement, arrGuests) {
-    for (var k = 0; k < arrGuests.length; k++) {
-      if (arrGuests[k].value > roomsElement.value) {
-        arrGuests[k].setAttribute('disabled', true);
-      } else if ((arrGuests[k].value <= roomsElement.value) && (roomsElement.value !== '100') && (arrGuests[k].value !== '0')) {
-        arrGuests[k].removeAttribute('disabled');
-      } else if (arrGuests[k].value === '0' && roomsElement.value !== '100') {
-        arrGuests[k].setAttribute('disabled', true);
-      } else if (arrGuests[k].value === '0' && roomsElement.value === '100') {
-        arrGuests[k].removeAttribute('disabled');
-      } else if (arrGuests[k].value !== '0' && roomsElement.value === '100') {
-        arrGuests[k].setAttribute('disabled', true);
+    for (var i = 0; i < arrGuests.length; i++) {
+      if (arrGuests[i].value > roomsElement.value) {
+        arrGuests[i].setAttribute('disabled', true);
+      } else if ((arrGuests[i].value <= roomsElement.value) && (roomsElement.value !== '100') && (arrGuests[i].value !== '0')) {
+        arrGuests[i].removeAttribute('disabled');
+      } else if (arrGuests[i].value === '0' && roomsElement.value !== '100') {
+        arrGuests[i].setAttribute('disabled', true);
+      } else if (arrGuests[i].value === '0' && roomsElement.value === '100') {
+        arrGuests[i].removeAttribute('disabled');
+      } else if (arrGuests[i].value !== '0' && roomsElement.value === '100') {
+        arrGuests[i].setAttribute('disabled', true);
       }
     }
   };
 
   var roomCapacityChangeHandler = function (arrRooms, arrGuests) {
-    for (var k = 0; k < arrRooms.length; k++) {
-      if (inputRoomNumber.value === arrRooms[k].value && arrRooms[k].value !== '100') {
-        inputCapacity.value = arrRooms[k].value;
-        disableSelectOptions(arrRooms[k], arrGuests);
-      } else if (inputRoomNumber.value === arrRooms[k].value && arrRooms[k].value === '100') {
+    for (var i = 0; i < arrRooms.length; i++) {
+      if (inputRoomNumber.value === arrRooms[i].value && arrRooms[i].value !== '100') {
+        inputCapacity.value = arrRooms[i].value;
+        disableSelectOptions(arrRooms[i], arrGuests);
+      } else if (inputRoomNumber.value === arrRooms[i].value && arrRooms[i].value === '100') {
         inputCapacity.value = '0';
-        disableSelectOptions(arrRooms[k], arrGuests);
+        disableSelectOptions(arrRooms[i], arrGuests);
       }
     }
   };
@@ -72,6 +93,7 @@
     roomCapacityChangeHandler(inputRoomsNumberOptions, inputCapacityOptions);
   });
 
+
   // Form submit event
 
   var inputTitle = form.querySelector('#title');
@@ -79,17 +101,35 @@
   var textareaDescription = form.querySelector('#description');
   var featuresList = form.querySelectorAll('.features input[type="checkbox"]');
 
+  var fieldReset = function (field, val) {
+    field.value = val || '';
+  };
+
+  var checkboxListReset = function (array) {
+    array.forEach(function (it) {
+      it.checked = false;
+    });
+  };
+
+  var checkRequiredField = function (element, event) {
+    if (!element.value) {
+      event.preventDefault();
+      element.focus();
+    }
+  };
+
+  // Save new ad functions
+
   var postNewAd = function () {
-    window.lib.fieldReset(inputTitle);
-    window.lib.fieldReset(inputAddress);
-    window.lib.fieldResetToValue(inputTypeHouse, 'flat');
-    window.lib.fieldResetToValue(inputPrice, '1000');
-    window.lib.fieldResetToValue(selectTimeIn, '12:00');
-    window.lib.fieldResetToValue(selectTimeIn, '12:00');
-    window.lib.fieldResetToValue(inputRoomNumber, '1');
-    window.lib.fieldResetToValue(inputCapacity, '3');
-    window.lib.fieldReset(textareaDescription);
-    window.lib.checkboxListReset(featuresList);
+    fieldReset(inputTitle);
+    fieldReset(inputTypeHouse, 'flat');
+    fieldReset(inputPrice, '1000');
+    fieldReset(selectTimeIn, '12:00');
+    fieldReset(selectTimeOut, '12:00');
+    fieldReset(inputRoomNumber, '1');
+    fieldReset(inputCapacity, '3');
+    fieldReset(textareaDescription);
+    checkboxListReset(featuresList);
   };
 
   var submitError = function (errorMessage) {
@@ -117,9 +157,10 @@
     form.insertAdjacentElement('beforeEnd', errorPopup);
   };
 
+  // Add submit listener
+
   form.addEventListener('submit', function (evt) {
-    window.lib.checkRequiredField(inputTitle, evt);
-    window.lib.checkRequiredField(inputAddress, evt);
+    checkRequiredField(inputAddress, evt);
     var formData = new FormData(form);
     window.backend.save(formData, postNewAd, submitError);
     evt.preventDefault();
