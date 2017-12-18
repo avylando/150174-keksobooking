@@ -27,8 +27,8 @@
 
   mainPin.style.zIndex = '100';
 
-  mainPin.addEventListener('mousedown', function (event) {
-    event.preventDefault();
+  mainPin.addEventListener('mousedown', function (mouseDownEvt) {
+    mouseDownEvt.preventDefault();
 
     var mainPinMouseMoveHandler = function (evt) {
       evt.preventDefault();

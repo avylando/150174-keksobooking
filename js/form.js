@@ -10,10 +10,10 @@
   var selectTimeOut = form.querySelector('#timeout');
   var inputTypeHouse = form.querySelector('#type');
   var inputPrice = form.querySelector('#price');
-  var inputRoomNumber = form.querySelector('#room_number');
-  var inputRoomsNumberOptions = inputRoomNumber.querySelectorAll('option');
+  var inputRoomsNumber = form.querySelector('#room_number');
+  var roomsNumberOptions = inputRoomsNumber.querySelectorAll('option');
   var inputCapacity = form.querySelector('#capacity');
-  var inputCapacityOptions = inputCapacity.querySelectorAll('option');
+  var capacityOptions = Array.from(inputCapacity.querySelectorAll('option'));
   var inputTitle = form.querySelector('#title');
   var inputAddress = form.querySelector('#address');
   var textareaDescription = form.querySelector('#description');
@@ -47,41 +47,40 @@
 
   // Sync room number and capacity
 
-  var disableSelectOptions = function (roomsElement, arrGuests) {
+  var disableSelectOptions = function (roomsOption, arrGuests) {
     for (var i = 0; i < arrGuests.length; i++) {
-      if (arrGuests[i].value > roomsElement.value) {
+      if (arrGuests[i].value > roomsOption.value) {
         arrGuests[i].setAttribute('disabled', true);
-      } else if ((arrGuests[i].value <= roomsElement.value) && (roomsElement.value !== '100') && (arrGuests[i].value !== '0')) {
+      } else if ((arrGuests[i].value <= roomsOption.value) && (roomsOption.value !== '100') && (arrGuests[i].value !== '0')) {
         arrGuests[i].removeAttribute('disabled');
-      } else if (arrGuests[i].value === '0' && roomsElement.value !== '100') {
+      } else if (arrGuests[i].value === '0' && roomsOption.value !== '100') {
         arrGuests[i].setAttribute('disabled', true);
-      } else if (arrGuests[i].value === '0' && roomsElement.value === '100') {
+      } else if (arrGuests[i].value === '0' && roomsOption.value === '100') {
         arrGuests[i].removeAttribute('disabled');
-      } else if (arrGuests[i].value !== '0' && roomsElement.value === '100') {
+      } else if (arrGuests[i].value !== '0' && roomsOption.value === '100') {
         arrGuests[i].setAttribute('disabled', true);
       }
     }
   };
 
-  var roomCapacityChangeHandler = function (arrRooms, arrGuests) {
-    for (var i = 0; i < arrRooms.length; i++) {
-      if (inputRoomNumber.value === arrRooms[i].value && arrRooms[i].value !== '100') {
-        inputCapacity.value = arrRooms[i].value;
-        disableSelectOptions(arrRooms[i], arrGuests);
-      } else if (inputRoomNumber.value === arrRooms[i].value && arrRooms[i].value === '100') {
+  var roomCapacityChangeHandler = function () {
+    for (var i = 0; i < roomsNumberOptions.length; i++) {
+      if (inputRoomsNumber.value === roomsNumberOptions[i].value && roomsNumberOptions[i].value !== '100') {
+        inputCapacity.value = roomsNumberOptions[i].value;
+        disableSelectOptions(roomsNumberOptions[i], capacityOptions);
+      } else if (inputRoomsNumber.value === roomsNumberOptions[i].value && roomsNumberOptions[i].value === '100') {
         inputCapacity.value = '0';
-        disableSelectOptions(arrRooms[i], arrGuests);
+        disableSelectOptions(roomsNumberOptions[i], capacityOptions);
       }
     }
   };
 
   // Set default capacity value
-  inputCapacity.value = '1';
-
-  inputRoomNumber.addEventListener('change', function () {
-    roomCapacityChangeHandler(inputRoomsNumberOptions, inputCapacityOptions);
+  capacityOptions.map(function (option) {
+    return option.value === '1' ? option.setAttribute('selected', true) : option.setAttribute('disabled', true);
   });
 
+  inputRoomsNumber.addEventListener('change', roomCapacityChangeHandler);
 
   // Form submit event
 
@@ -95,9 +94,9 @@
     });
   };
 
-  var checkRequiredField = function (element, event) {
+  var checkRequiredField = function (element, evt) {
     if (!element.value) {
-      event.preventDefault();
+      evt.preventDefault();
       element.focus();
     }
   };
@@ -110,8 +109,8 @@
     fieldReset(inputPrice, '1000');
     fieldReset(selectTimeIn, '12:00');
     fieldReset(selectTimeOut, '12:00');
-    fieldReset(inputRoomNumber, '1');
-    fieldReset(inputCapacity, '3');
+    fieldReset(inputRoomsNumber, '1');
+    fieldReset(inputCapacity, '1');
     fieldReset(textareaDescription);
     checkboxListReset(featuresList);
   };
