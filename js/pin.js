@@ -3,6 +3,7 @@
 
 (function () {
 
+  // Constants
   var PIN_WIDTH = 46;
   var PIN_HEIGHT = 64;
 

@@ -3,60 +3,49 @@
 
 (function () {
 
-  // Variables
 
+  // DOM-elements
   var form = document.querySelector('.notice__form');
-
-  var getOptionValuesInSelect = function (select) {
-    var selectOptions = select.querySelectorAll('option');
-    var optionValue = null;
-    var optionValues = [];
-
-    for (var i = 0; i < selectOptions.length; i++) {
-      optionValue = selectOptions[i].getAttribute('value');
-      optionValues[i] = optionValue;
-    }
-
-    return optionValues;
-  };
-
-  // Sync timeIn and timeOut
-
   var selectTimeIn = form.querySelector('#timein');
   var selectTimeOut = form.querySelector('#timeout');
-  var timeInValues = getOptionValuesInSelect(selectTimeIn);
-  var timeOutValues = getOptionValuesInSelect(selectTimeOut);
+  var inputTypeHouse = form.querySelector('#type');
+  var inputPrice = form.querySelector('#price');
+  var inputRoomNumber = form.querySelector('#room_number');
+  var inputRoomsNumberOptions = inputRoomNumber.querySelectorAll('option');
+  var inputCapacity = form.querySelector('#capacity');
+  var inputCapacityOptions = inputCapacity.querySelectorAll('option');
+  var inputTitle = form.querySelector('#title');
+  var inputAddress = form.querySelector('#address');
+  var textareaDescription = form.querySelector('#description');
+  var featuresList = form.querySelectorAll('.features input[type="checkbox"]');
+
+  // Variables
+  var timeInValues = window.utils.getOptionValuesInSelect(selectTimeIn);
+  var timeOutValues = window.utils.getOptionValuesInSelect(selectTimeOut);
+  var houseTypes = window.utils.getOptionValuesInSelect(inputTypeHouse);
+  var minPrices = ['1000', '0', '5000', '10000'];
+
+
+  // Sync timeIn and timeOut
 
   var syncValues = function (elem, val) {
     elem.value = val;
   };
-
   window.synchronizeFields(selectTimeIn, selectTimeOut, timeInValues, timeOutValues, syncValues);
 
-  // Sync house type and price
-
-  var inputTypeHouse = form.querySelector('#type');
-  var inputPrice = form.querySelector('#price');
-  var houseTypes = getOptionValuesInSelect(inputTypeHouse);
-  var minPrices = ['1000', '0', '5000', '10000'];
 
   // Set default min attribute
   inputPrice.setAttribute('min', '1000');
 
+  // Sync house type and price
+
   var syncValueWithMin = function (elem, val) {
     elem.min = val;
   };
-
   window.synchronizeFields(inputTypeHouse, inputPrice, houseTypes, minPrices, syncValueWithMin);
 
 
   // Sync room number and capacity
-
-  var inputRoomNumber = form.querySelector('#room_number');
-  var inputCapacity = form.querySelector('#capacity');
-  var inputRoomsNumberOptions = inputRoomNumber.querySelectorAll('option');
-  var inputCapacityOptions = inputCapacity.querySelectorAll('option');
-
 
   var disableSelectOptions = function (roomsElement, arrGuests) {
     for (var i = 0; i < arrGuests.length; i++) {
@@ -96,11 +85,6 @@
 
   // Form submit event
 
-  var inputTitle = form.querySelector('#title');
-  var inputAddress = form.querySelector('#address');
-  var textareaDescription = form.querySelector('#description');
-  var featuresList = form.querySelectorAll('.features input[type="checkbox"]');
-
   var fieldReset = function (field, val) {
     field.value = val || '';
   };
@@ -118,9 +102,9 @@
     }
   };
 
-  // Save new ad functions
+  // Submit functions
 
-  var postNewAd = function () {
+  var submitSuccess = function () {
     fieldReset(inputTitle);
     fieldReset(inputTypeHouse, 'flat');
     fieldReset(inputPrice, '1000');
@@ -162,7 +146,7 @@
   form.addEventListener('submit', function (evt) {
     checkRequiredField(inputAddress, evt);
     var formData = new FormData(form);
-    window.backend.save(formData, postNewAd, submitError);
+    window.backend.save(formData, submitSuccess, submitError);
     evt.preventDefault();
   });
 
