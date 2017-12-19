@@ -3,103 +3,86 @@
 
 (function () {
 
-  // Validation form
 
+  // DOM-elements
   var form = document.querySelector('.notice__form');
-
-  var getOptionValuesInSelect = function (select) {
-    var selectOptions = select.querySelectorAll('option');
-    var optionValue = null;
-    var optionValues = [];
-
-    for (var i = 0; i < selectOptions.length; i++) {
-      optionValue = selectOptions[i].getAttribute('value');
-      optionValues[i] = optionValue;
-    }
-
-    return optionValues;
-  };
-
-  // Sync timeIn and timeOut
-
   var selectTimeIn = form.querySelector('#timein');
   var selectTimeOut = form.querySelector('#timeout');
-  var timeInValues = getOptionValuesInSelect(selectTimeIn);
-  var timeOutValues = getOptionValuesInSelect(selectTimeOut);
+  var inputTypeHouse = form.querySelector('#type');
+  var inputPrice = form.querySelector('#price');
+  var inputRoomsNumber = form.querySelector('#room_number');
+  var roomsNumberOptions = inputRoomsNumber.querySelectorAll('option');
+  var inputCapacity = form.querySelector('#capacity');
+  var capacityOptions = Array.from(inputCapacity.querySelectorAll('option'));
+  var inputTitle = form.querySelector('#title');
+  var inputAddress = form.querySelector('#address');
+  var textareaDescription = form.querySelector('#description');
+  var featuresList = form.querySelectorAll('.features input[type="checkbox"]');
+
+  // Variables
+  var timeInValues = window.utils.getOptionValuesInSelect(selectTimeIn);
+  var timeOutValues = window.utils.getOptionValuesInSelect(selectTimeOut);
+  var houseTypes = window.utils.getOptionValuesInSelect(inputTypeHouse);
+  var minPrices = ['1000', '0', '5000', '10000'];
+
+
+  // Sync timeIn and timeOut
 
   var syncValues = function (elem, val) {
     elem.value = val;
   };
-
   window.synchronizeFields(selectTimeIn, selectTimeOut, timeInValues, timeOutValues, syncValues);
 
-  // Sync house type and price
-
-  var inputTypeHouse = form.querySelector('#type');
-  var inputPrice = form.querySelector('#price');
-  var houseTypes = getOptionValuesInSelect(inputTypeHouse);
-  var minPrices = ['1000', '0', '5000', '10000'];
 
   // Set default min attribute
   inputPrice.setAttribute('min', '1000');
 
+  // Sync house type and price
+
   var syncValueWithMin = function (elem, val) {
     elem.min = val;
   };
-
   window.synchronizeFields(inputTypeHouse, inputPrice, houseTypes, minPrices, syncValueWithMin);
 
 
   // Sync room number and capacity
 
-  var inputRoomNumber = form.querySelector('#room_number');
-  var inputCapacity = form.querySelector('#capacity');
-  var inputRoomsNumberOptions = inputRoomNumber.querySelectorAll('option');
-  var inputCapacityOptions = inputCapacity.querySelectorAll('option');
-
-
-  var disableSelectOptions = function (roomsElement, arrGuests) {
+  var disableSelectOptions = function (roomsOption, arrGuests) {
     for (var i = 0; i < arrGuests.length; i++) {
-      if (arrGuests[i].value > roomsElement.value) {
+      if (arrGuests[i].value > roomsOption.value) {
         arrGuests[i].setAttribute('disabled', true);
-      } else if ((arrGuests[i].value <= roomsElement.value) && (roomsElement.value !== '100') && (arrGuests[i].value !== '0')) {
+      } else if ((arrGuests[i].value <= roomsOption.value) && (roomsOption.value !== '100') && (arrGuests[i].value !== '0')) {
         arrGuests[i].removeAttribute('disabled');
-      } else if (arrGuests[i].value === '0' && roomsElement.value !== '100') {
+      } else if (arrGuests[i].value === '0' && roomsOption.value !== '100') {
         arrGuests[i].setAttribute('disabled', true);
-      } else if (arrGuests[i].value === '0' && roomsElement.value === '100') {
+      } else if (arrGuests[i].value === '0' && roomsOption.value === '100') {
         arrGuests[i].removeAttribute('disabled');
-      } else if (arrGuests[i].value !== '0' && roomsElement.value === '100') {
+      } else if (arrGuests[i].value !== '0' && roomsOption.value === '100') {
         arrGuests[i].setAttribute('disabled', true);
       }
     }
   };
 
-  var roomCapacityChangeHandler = function (arrRooms, arrGuests) {
-    for (var i = 0; i < arrRooms.length; i++) {
-      if (inputRoomNumber.value === arrRooms[i].value && arrRooms[i].value !== '100') {
-        inputCapacity.value = arrRooms[i].value;
-        disableSelectOptions(arrRooms[i], arrGuests);
-      } else if (inputRoomNumber.value === arrRooms[i].value && arrRooms[i].value === '100') {
+  var roomCapacityChangeHandler = function () {
+    for (var i = 0; i < roomsNumberOptions.length; i++) {
+      if (inputRoomsNumber.value === roomsNumberOptions[i].value && roomsNumberOptions[i].value !== '100') {
+        inputCapacity.value = roomsNumberOptions[i].value;
+        disableSelectOptions(roomsNumberOptions[i], capacityOptions);
+      } else if (inputRoomsNumber.value === roomsNumberOptions[i].value && roomsNumberOptions[i].value === '100') {
         inputCapacity.value = '0';
-        disableSelectOptions(arrRooms[i], arrGuests);
+        disableSelectOptions(roomsNumberOptions[i], capacityOptions);
       }
     }
   };
 
   // Set default capacity value
-  inputCapacity.value = '1';
-
-  inputRoomNumber.addEventListener('change', function () {
-    roomCapacityChangeHandler(inputRoomsNumberOptions, inputCapacityOptions);
+  capacityOptions.map(function (option) {
+    return option.value === '1' ? option.setAttribute('selected', true) : option.setAttribute('disabled', true);
   });
 
+  inputRoomsNumber.addEventListener('change', roomCapacityChangeHandler);
 
   // Form submit event
-
-  var inputTitle = form.querySelector('#title');
-  var inputAddress = form.querySelector('#address');
-  var textareaDescription = form.querySelector('#description');
-  var featuresList = form.querySelectorAll('.features input[type="checkbox"]');
 
   var fieldReset = function (field, val) {
     field.value = val || '';
@@ -111,23 +94,23 @@
     });
   };
 
-  var checkRequiredField = function (element, event) {
+  var checkRequiredField = function (element, evt) {
     if (!element.value) {
-      event.preventDefault();
+      evt.preventDefault();
       element.focus();
     }
   };
 
-  // Save new ad functions
+  // Submit functions
 
-  var postNewAd = function () {
+  var submitSuccess = function () {
     fieldReset(inputTitle);
     fieldReset(inputTypeHouse, 'flat');
     fieldReset(inputPrice, '1000');
     fieldReset(selectTimeIn, '12:00');
     fieldReset(selectTimeOut, '12:00');
-    fieldReset(inputRoomNumber, '1');
-    fieldReset(inputCapacity, '3');
+    fieldReset(inputRoomsNumber, '1');
+    fieldReset(inputCapacity, '1');
     fieldReset(textareaDescription);
     checkboxListReset(featuresList);
   };
@@ -162,7 +145,7 @@
   form.addEventListener('submit', function (evt) {
     checkRequiredField(inputAddress, evt);
     var formData = new FormData(form);
-    window.backend.save(formData, postNewAd, submitError);
+    window.backend.save(formData, submitSuccess, submitError);
     evt.preventDefault();
   });
 

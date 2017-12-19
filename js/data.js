@@ -3,12 +3,25 @@
 
 (function () {
 
-  // Variables
+  // Constants
+  var MAX_ADS = 5;
+  var LOW_PRICE = 10000;
+  var HIGH_PRICE = 50000;
 
-  var similarAds = [];
+  // DOM-elements
   var map = document.querySelector('.map');
-  var pinsMap = document.querySelector('.map__pins');
+  var pinsMap = map.querySelector('.map__pins');
   var filtersContainer = map.querySelector('.map__filters-container');
+  var houseTypeFilter = filtersContainer.querySelector('#housing-type');
+  var housePriceFilter = filtersContainer.querySelector('#housing-price');
+  var roomsNumberFilter = filtersContainer.querySelector('#housing-rooms');
+  var guestsNumberFilter = filtersContainer.querySelector('#housing-guests');
+  var featuresFilter = filtersContainer.querySelector('#housing-features');
+  var features = Array.from(featuresFilter.querySelectorAll('input[name="features"]'));
+
+  // Variables
+  var similarAds = [];
+  var timeoutInterval = 500;
 
   // Load users ads
 
@@ -46,31 +59,21 @@
 
   // Set filters
 
-  var houseTypeFilter = filtersContainer.querySelector('#housing-type');
-  var housePriceFilter = filtersContainer.querySelector('#housing-price');
-  var roomsNumberFilter = filtersContainer.querySelector('#housing-rooms');
-  var guestsNumberFilter = filtersContainer.querySelector('#housing-guests');
-  var featuresFilter = filtersContainer.querySelector('#housing-features');
-
   var checkPriceRange = function (element) {
-    var lowPrice = 10000;
-    var highPrice = 50000;
     switch (housePriceFilter.value) {
       case 'low':
-        return element.offer.price < lowPrice;
+        return element.offer.price < LOW_PRICE;
       case 'middle':
-        return element.offer.price >= lowPrice && element.offer.price <= highPrice;
+        return element.offer.price >= LOW_PRICE && element.offer.price <= HIGH_PRICE;
       case 'high':
-        return element.offer.price > highPrice;
+        return element.offer.price > HIGH_PRICE;
       case 'any':
         return element;
     }
     return false;
   };
 
-  var features = Array.from(featuresFilter.querySelectorAll('input[name="features"]'));
   var checkFeatureOptions = function (element) {
-
     var checkedFeatures = features.filter(function (input) {
       return input.checked;
     });
@@ -90,8 +93,8 @@
   var filterByValues = function (element) {
     return (houseTypeFilter.value === 'any' || element.offer.type === houseTypeFilter.value)
       && checkPriceRange(element)
-      && (roomsNumberFilter.value === 'any' || element.offer.rooms === +roomsNumberFilter.value)
-      && (guestsNumberFilter.value === 'any' || element.offer.guests === +guestsNumberFilter.value)
+      && (roomsNumberFilter.value === 'any' || element.offer.rooms === parseInt(roomsNumberFilter.value, 10))
+      && (guestsNumberFilter.value === 'any' || element.offer.guests === parseInt(guestsNumberFilter.value, 10))
       && checkFeatureOptions(element.offer.features);
   };
 
@@ -116,26 +119,24 @@
 
   // Add debounce
 
-  var filtersChangeHandler = window.debounce(updateMap, 500);
+  var filtersChangeHandler = window.debounce(updateMap, timeoutInterval);
+
   filtersContainer.addEventListener('change', filtersChangeHandler);
 
 
-  var setElementId = function (element, number) {
-    element.setAttribute('id', 'user' + number);
-  };
+  // Export values
 
   window.data = {
     fillMap: function (array) {
-      var maxAds = 5;
       array = array || similarAds;
-      array = array.slice(0, maxAds);
+      array = array.slice(0, MAX_ADS);
 
       for (var i = 0; i < array.length; i++) {
         var pin = window.pin.generate(array[i]);
         var card = window.card.generate(array[i]);
 
-        setElementId(pin, i + 1);
-        setElementId(card, i + 1);
+        window.utils.setUserId(pin, i + 1);
+        window.utils.setUserId(card, i + 1);
 
         window.showCard(pin, card);
 
