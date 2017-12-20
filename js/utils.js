@@ -2,15 +2,23 @@
 
 (function () {
 
-  window.Keycode = {
-    ESC: 27,
-    ENTER: 13
-  };
-
   window.utils = {
 
-    setUserId: function (element, number) {
-      element.setAttribute('id', 'user' + number);
+    Keycode: {
+      ESC: 27,
+      ENTER: 13
+    },
+
+    setPopupTimeout: function (popup, interval) {
+      setTimeout(function () {
+        popup.style.display = 'none';
+      }, interval);
+    },
+
+    clearChildNodes: function (parent) {
+      while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+      }
     },
 
     removeElementsAttribute: function (array, attribute) {
@@ -20,14 +28,13 @@
     },
 
     getOptionValuesInSelect: function (select) {
-      var selectOptions = select.querySelectorAll('option');
+      var selectOptions = Array.from(select.options);
       var optionValue = null;
-      var optionValues = [];
 
-      for (var i = 0; i < selectOptions.length; i++) {
-        optionValue = selectOptions[i].getAttribute('value');
-        optionValues[i] = optionValue;
-      }
+      var optionValues = selectOptions.map(function (option) {
+        optionValue = option.getAttribute('value');
+        return optionValue;
+      });
 
       return optionValues;
     }

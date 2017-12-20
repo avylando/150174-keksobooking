@@ -11,6 +11,7 @@
 
   var template = document.querySelector('template').content;
   var mapPinTemplate = template.querySelector('.map__pin');
+  mapPinTemplate.classList.add('map__pin--user');
 
   // Get position
 
@@ -28,13 +29,12 @@
     width: PIN_WIDTH,
     height: PIN_HEIGHT,
     generate: function (obj) {
-      var pinElement = mapPinTemplate.cloneNode(true);
-      pinElement.querySelector('img').src = obj.author.avatar;
-      pinElement.style.left = getPinPositionX(obj.location.x, PIN_WIDTH);
-      pinElement.style.top = getPinPositionY(obj.location.y, PIN_HEIGHT);
-      pinElement.classList.add('map__pin--user');
+      var pinClone = mapPinTemplate.cloneNode(true);
+      pinClone.querySelector('img').src = obj.author.avatar;
+      pinClone.style.left = getPinPositionX(obj.location.x, PIN_WIDTH);
+      pinClone.style.top = getPinPositionY(obj.location.y, PIN_HEIGHT);
 
-      return pinElement;
+      return pinClone;
     }
   };
 

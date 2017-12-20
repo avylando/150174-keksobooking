@@ -4,29 +4,22 @@
 
   // Function show/hide card
 
-  window.showCard = function (button, card) {
+  window.addPinListener = function (button, card) {
 
     // Variables
 
     var userPins;
     var userCards;
-    var buttonId = button.getAttribute('id');
-    var cardId = card.getAttribute('id');
     var cardClose = card.querySelector('.popup__close');
 
     // Handlers
 
-    var buttonClickHandler = function (evt) {
+    var buttonClickHandler = function () {
 
-      if (evt.currentTarget === button || evt.keyCode === window.Keycode.ENTER) {
-        button.classList.add('map__pin--active');
-        if (buttonId === cardId) {
-          card.classList.remove('hidden');
-          cardClose.addEventListener('click', cardCloseClickHandler);
-          cardClose.addEventListener('keydown', cardEnterCloseHandler);
-          document.addEventListener('keydown', cardEscCloseHandler);
-        }
-      }
+      button.classList.add('map__pin--active');
+      card.classList.remove('hidden');
+      cardClose.addEventListener('click', cardCloseClickHandler);
+      document.addEventListener('keydown', cardEscCloseHandler);
 
       userPins = Array.from(document.querySelectorAll('.map__pin--user'));
       userPins.forEach(function (it) {
@@ -48,19 +41,12 @@
         card.classList.add('hidden');
         button.classList.remove('map__pin--active');
         cardClose.removeEventListener('click', cardCloseClickHandler);
-        cardClose.removeEventListener('keydown', cardEnterCloseHandler);
         document.removeEventListener('keydown', cardEscCloseHandler);
       }
     };
 
-    var cardEnterCloseHandler = function (evt) {
-      if (evt.keyCode === window.Keycode.ENTER) {
-        cardCloseClickHandler();
-      }
-    };
-
     var cardEscCloseHandler = function (evt) {
-      if (evt.keyCode === window.Keycode.ESC) {
+      if (evt.keyCode === window.utils.Keycode.ESC) {
         cardCloseClickHandler();
       }
     };

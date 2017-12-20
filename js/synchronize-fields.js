@@ -6,7 +6,7 @@
 
     fieldA.addEventListener('change', function () {
       for (var i = 0; i < valuesA.length; i++) {
-        if (fieldA.value === valuesA[i]) {
+        if (fieldA.value.toUpperCase() === valuesA[i].toUpperCase()) {
           callback(fieldB, valuesB[i]);
         }
       }

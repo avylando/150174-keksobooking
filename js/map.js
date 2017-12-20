@@ -25,8 +25,6 @@
 
   // Add draggable Main pin and activate map
 
-  mainPin.style.zIndex = '100';
-
   mainPin.addEventListener('mousedown', function (mouseDownEvt) {
     mouseDownEvt.preventDefault();
 
@@ -58,32 +56,26 @@
         map.classList.remove('map--faded');
         noticeForm.classList.remove('notice__form--disabled');
         window.utils.removeElementsAttribute(noticeFieldsets, 'disabled');
-        window.data.fillMap();
+
+        window.backend.load(window.loadAdsSuccess, window.loadAdsError);
+        // window.data.fillMap();
       }
 
       // Set adress value
-      var leftCoord = (parseInt(mainPin.style.left, 10));
-      var topCoord = (parseInt(mainPin.style.top, 10));
+      var leftCoord = mainPin.offsetLeft;
+      var topCoord = mainPin.offsetTop;
       var adressX = leftCoord + (MAIN_PIN_WIDTH / 2);
       var adressY = topCoord + MAIN_PIN_HEIGHT;
 
       // Check main pin position values
-      if (isNaN(leftCoord) && isNaN(topCoord)) {
-        inputAddress.value = 'x: ' + DEFAULT_X + ', y: ' + DEFAULT_Y;
-      } else if (isNaN(leftCoord)) {
-        inputAddress.value = 'x: ' + DEFAULT_X + ', y: ' + adressY;
-      } else if (isNaN(topCoord)) {
-        inputAddress.value = 'x: ' + adressX + ', y: ' + DEFAULT_Y;
-      } else {
-        inputAddress.value = 'x: ' + adressX + ', y: ' + adressY;
-      }
+      inputAddress.value = 'x: ' + adressX + ', y: ' + adressY;
 
       document.removeEventListener('mousemove', mainPinMouseMoveHandler);
-      mainPin.removeEventListener('mouseup', mainPinMouseUpHandler);
+      document.removeEventListener('mouseup', mainPinMouseUpHandler);
     };
 
     document.addEventListener('mousemove', mainPinMouseMoveHandler);
-    mainPin.addEventListener('mouseup', mainPinMouseUpHandler);
+    document.addEventListener('mouseup', mainPinMouseUpHandler);
   });
 
 })();

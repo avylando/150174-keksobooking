@@ -6,7 +6,13 @@
   // Find card template
 
   var template = document.querySelector('template').content;
-  var mapCard = template.querySelector('article.map__card');
+  var mapCardTemplate = template.querySelector('article.map__card');
+  var featuresTemplate = mapCardTemplate.querySelector('.popup__features');
+  var photosTemplate = mapCardTemplate.querySelector('.popup__pictures');
+
+  // Clear template
+  window.utils.clearChildNodes(featuresTemplate);
+  window.utils.clearChildNodes(photosTemplate);
 
   // Vocabulary
 
@@ -19,27 +25,33 @@
 
   // Useful functions
 
-  var addFeatureItem = function (array) {
-    var featuresListElements = [];
+  var createFeaturesList = function (array) {
 
-    array.forEach(function (it) {
-      it = '<li></li>';
-      featuresListElements.push(it);
+    var featuresFragment = document.createDocumentFragment();
+    array.map(function (it) {
+      var featureName = it;
+      it = document.createElement('li');
+      it.classList.add('feature');
+      it.classList.add('feature--' + featureName);
+      featuresFragment.appendChild(it);
     });
 
-    var featuresList = featuresListElements.join(' ');
-    return featuresList;
+    return featuresFragment;
   };
 
-  var addFeatureItemClasses = function (element, array) {
-    var featureItems = element.querySelectorAll('.popup__features > li');
+  var createPhotosList = function (array) {
 
-    for (var i = 0; i < array.length; i++) {
-      featureItems[i].classList.add('feature');
-      featureItems[i].classList.add('feature--' + array[i]);
-    }
+    var photosFragment = document.createDocumentFragment();
+    array.map(function (it) {
+      var imageSrc = it;
+      it = document.createElement('img');
+      it.src = imageSrc;
+      it.width = '70';
+      it.height = '40';
+      photosFragment.appendChild(it);
+    });
 
-    return featureItems;
+    return photosFragment;
   };
 
 
@@ -47,24 +59,21 @@
 
   window.card = {
     generate: function (obj) {
-      var cardElement = mapCard.cloneNode(true);
+      var cardClone = mapCardTemplate.cloneNode(true);
 
-      cardElement.querySelector('h3').textContent = obj.offer.title;
-      cardElement.querySelector('p small').textContent = obj.offer.adress;
-      cardElement.querySelector('.popup__price').innerHTML = obj.offer.price + '&#x20bd;/ночь';
-      cardElement.querySelector('h4').textContent = houseTypes[obj.offer.type] || 'Не указан';
-      cardElement.querySelector('h4 + p').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
-      cardElement.querySelector('h4 + p + p').textContent = 'Заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
-      cardElement.querySelector('.popup__features').innerHTML = addFeatureItem(obj.offer.features);
-      cardElement.querySelectorAll('.popup__features > li').textContent = addFeatureItemClasses(cardElement, obj.offer.features);
-      cardElement.querySelector('.popup__features + p').textContent = obj.offer.description;
-      cardElement.querySelector('.popup__avatar').src = obj.author.avatar;
-      cardElement.style.left = '30px';
-      cardElement.style.top = '170px';
-      cardElement.style.zIndex = '200';
-      cardElement.classList.add('hidden');
+      cardClone.querySelector('.popup__avatar').src = obj.author.avatar;
+      cardClone.querySelector('h3').textContent = obj.offer.title;
+      cardClone.querySelector('p small').textContent = obj.offer.adress;
+      cardClone.querySelector('.popup__price').innerHTML = obj.offer.price + '&#x20bd;/ночь';
+      cardClone.querySelector('h4').textContent = houseTypes[obj.offer.type] || 'Не указан';
+      cardClone.querySelector('h4 + p').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
+      cardClone.querySelector('h4 + p + p').textContent = 'Заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
+      cardClone.querySelector('.popup__features').appendChild(createFeaturesList(obj.offer.features));
+      cardClone.querySelector('.popup__features + p').textContent = obj.offer.description;
+      cardClone.querySelector('.popup__pictures').appendChild(createPhotosList(obj.offer.photos));
+      cardClone.classList.add('hidden');
 
-      return cardElement;
+      return cardClone;
     }
   };
 })();
