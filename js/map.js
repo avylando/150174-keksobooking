@@ -6,7 +6,6 @@
   // Constants
   var MIN_Y_COORD = 100;
   var MAX_Y_COORD = 500;
-  var MAIN_PIN_WIDTH = 64;
   var MAIN_PIN_HEIGHT = 80;
 
   // DOM-elements

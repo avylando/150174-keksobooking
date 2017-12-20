@@ -6,7 +6,6 @@
   // Constants
   var MIN_PRICES = ['1000', '0', '5000', '10000'];
   var DEFAULT_PRICE = '1000';
-  var DEFAULT_CAPACITY = '1';
   var FORM_POPUP_TIMEOUT_INTERVAL = 3000;
 
   var Capacity = {
