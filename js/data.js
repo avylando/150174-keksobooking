@@ -27,12 +27,10 @@
   //
 
   var fillMap = function (array) {
-    array = array;
-    array = array.slice(0, MAX_ADS);
-
     var pinsFragment = document.createDocumentFragment();
     var cardsFragment = document.createDocumentFragment();
-    array.forEach(function (it) {
+
+    array.slice(0, MAX_ADS).forEach(function (it) {
       var pin = window.pin.generate(it);
       var card = window.card.generate(it);
 
@@ -40,26 +38,10 @@
 
       pinsFragment.appendChild(pin);
       cardsFragment.appendChild(card);
-      pinsMap.appendChild(pinsFragment);
-      map.insertBefore(cardsFragment, filtersContainer);
     });
-  };
 
-  // Load users ads
-
-  window.loadAdsSuccess = function (data) {
-    similarAds = data;
-    fillMap(similarAds);
-  };
-
-  window.loadAdsError = function (errorMessage) {
-    var errorPopup = document.createElement('div');
-
-    errorPopup.classList.add('error-popup');
-    errorPopup.classList.add('error-popup--data');
-    errorPopup.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterBegin', errorPopup);
-    window.utils.setPopupTimeout(errorPopup, POPUP_TIMEOUT_INTERVAL);
+    pinsMap.appendChild(pinsFragment);
+    map.insertBefore(cardsFragment, filtersContainer);
   };
 
 
@@ -105,15 +87,15 @@
   };
 
   var clearMap = function () {
-    var userPins = document.querySelectorAll('.map__pin--user');
+    var userPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     var userCards = document.querySelectorAll('.popup');
 
-    userPins.forEach(function (it) {
-      pinsMap.removeChild(it);
+    userPins.forEach(function (pin) {
+      pin.remove();
     });
 
-    userCards.forEach(function (it) {
-      map.removeChild(it);
+    userCards.forEach(function (card) {
+      card.remove();
     });
   };
 
@@ -127,5 +109,24 @@
 
   var filtersChangeHandler = window.debounce(updateMap, DEBOUNCE_TIMEOUT_INTERVAL);
   filtersContainer.addEventListener('change', filtersChangeHandler);
+
+  // Export
+
+  window.data = {
+    loadSuccess: function (data) {
+      similarAds = data;
+      fillMap(similarAds);
+    },
+
+    loadError: function (errorMessage) {
+      var errorPopup = document.createElement('div');
+
+      errorPopup.classList.add('error-popup');
+      errorPopup.classList.add('error-popup--data');
+      errorPopup.textContent = errorMessage;
+      document.body.insertAdjacentElement('afterBegin', errorPopup);
+      window.utils.setPopupTimeout(errorPopup, POPUP_TIMEOUT_INTERVAL);
+    }
+  };
 
 })();

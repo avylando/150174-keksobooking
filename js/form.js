@@ -69,10 +69,6 @@
   };
   window.synchronizeFields(inputTypeHouse, inputPrice, houseTypes, MIN_PRICES, setMinValue);
 
-
-  // Set default capacity value
-  inputCapacity.value = DEFAULT_CAPACITY;
-
   // Validation capacity
 
   var validateCapacity = function () {
@@ -107,7 +103,6 @@
   var submitSuccess = function () {
     var currentAddressValue = inputAddress.value;
     form.reset();
-    inputCapacity.value = DEFAULT_CAPACITY;
     inputAddress.value = currentAddressValue;
   };
 

@@ -16,9 +16,7 @@
     },
 
     clearChildNodes: function (parent) {
-      while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
-      }
+      parent.innerHTML = '';
     },
 
     removeElementsAttribute: function (array, attribute) {
@@ -29,11 +27,9 @@
 
     getOptionValuesInSelect: function (select) {
       var selectOptions = Array.from(select.options);
-      var optionValue = null;
 
       var optionValues = selectOptions.map(function (option) {
-        optionValue = option.getAttribute('value');
-        return optionValue;
+        return option.value;
       });
 
       return optionValues;

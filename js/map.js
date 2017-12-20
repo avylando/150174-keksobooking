@@ -54,13 +54,13 @@
         map.classList.remove('map--faded');
         noticeForm.classList.remove('notice__form--disabled');
         window.utils.removeElementsAttribute(noticeFieldsets, 'disabled');
-        window.backend.load(window.loadAdsSuccess, window.loadAdsError);
+        window.backend.load(window.data.loadSuccess, window.data.loadError);
       }
 
       // Set adress value
       var leftCoord = mainPin.offsetLeft;
       var topCoord = mainPin.offsetTop;
-      var adressX = leftCoord + (MAIN_PIN_WIDTH / 2);
+      var adressX = leftCoord;
       var adressY = topCoord + MAIN_PIN_HEIGHT;
 
       // Check main pin position values

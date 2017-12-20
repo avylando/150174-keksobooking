@@ -11,16 +11,15 @@
 
   var template = document.querySelector('template').content;
   var mapPinTemplate = template.querySelector('.map__pin');
-  mapPinTemplate.classList.add('map__pin--user');
 
   // Get position
 
   var getPinPositionX = function (houseX, width) {
-    return (houseX - (width / 2)) + 'px';
+    return (houseX - width) + 'px';
   };
 
   var getPinPositionY = function (houseY, height) {
-    return (houseY - height) + 'px';
+    return (houseY - (height / 2)) + 'px';
   };
 
   // Export values

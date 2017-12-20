@@ -3,6 +3,10 @@
 
 (function () {
 
+  // Constants
+  var IMAGE_WIDTH = '70px';
+  var IMAGE_HEIGHT = '40px';
+
   // Find card template
 
   var template = document.querySelector('template').content;
@@ -28,12 +32,11 @@
   var createFeaturesList = function (array) {
 
     var featuresFragment = document.createDocumentFragment();
-    array.map(function (it) {
-      var featureName = it;
-      it = document.createElement('li');
-      it.classList.add('feature');
-      it.classList.add('feature--' + featureName);
-      featuresFragment.appendChild(it);
+    array.forEach(function (featureName) {
+      var featureElement = document.createElement('li');
+      featureElement.classList.add('feature');
+      featureElement.classList.add('feature--' + featureName);
+      featuresFragment.appendChild(featureElement);
     });
 
     return featuresFragment;
@@ -42,13 +45,12 @@
   var createPhotosList = function (array) {
 
     var photosFragment = document.createDocumentFragment();
-    array.map(function (it) {
-      var imageSrc = it;
-      it = document.createElement('img');
-      it.src = imageSrc;
-      it.width = '70';
-      it.height = '40';
-      photosFragment.appendChild(it);
+    array.forEach(function (it) {
+      var image = document.createElement('img');
+      image.src = it;
+      image.style.width = IMAGE_WIDTH;
+      image.style.height = IMAGE_HEIGHT;
+      photosFragment.appendChild(image);
     });
 
     return photosFragment;
