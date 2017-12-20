@@ -6,8 +6,6 @@
   // Constants
   var MIN_Y_COORD = 100;
   var MAX_Y_COORD = 500;
-  var DEFAULT_X = 470;
-  var DEFAULT_Y = 455;
   var MAIN_PIN_WIDTH = 64;
   var MAIN_PIN_HEIGHT = 80;
 
@@ -56,9 +54,7 @@
         map.classList.remove('map--faded');
         noticeForm.classList.remove('notice__form--disabled');
         window.utils.removeElementsAttribute(noticeFieldsets, 'disabled');
-
         window.backend.load(window.loadAdsSuccess, window.loadAdsError);
-        // window.data.fillMap();
       }
 
       // Set adress value

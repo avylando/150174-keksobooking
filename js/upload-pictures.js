@@ -36,7 +36,6 @@
 
   var renderImageInContainer = function (image, container) {
     var reader = new FileReader();
-
     reader.addEventListener('load', function () {
       var photo = document.createElement('img');
       photo.src = reader.result;
@@ -62,21 +61,10 @@
   // Photos upload
 
   uploadPhotosInput.addEventListener('change', function () {
-    if (uploadPhotosInput.files.length > 1) {
-      var photoFiles = Array.from(uploadPhotosInput.files);
+    var file = uploadPhotosInput.files[0];
 
-      photoFiles.forEach(function (file) {
-        if (checkFileValidity(file, FILE_TYPES)) {
-          renderImageInContainer(file, photoContainer);
-        }
-      });
-
-    } else if (uploadPhotosInput.files.length === 1) {
-      var file = uploadPhotosInput.files[0];
-
-      if (checkFileValidity(file, FILE_TYPES)) {
-        renderImageInContainer(file, photoContainer);
-      }
+    if (checkFileValidity(file, FILE_TYPES)) {
+      renderImageInContainer(file, photoContainer);
     }
   });
 

@@ -58,7 +58,7 @@
         onError('Истек таймаут соединения с сервером');
       });
 
-      xhr.timeout = 10;
+      xhr.timeout = 10000;
       xhr.open('POST', URL);
       xhr.send(data);
     }

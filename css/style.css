@@ -1,5 +1,7 @@
 body
 {
+    position: relative;
+
     font-family: Roboto, Arial, sans-serif;
     font-size: 16px;
 
@@ -557,6 +559,8 @@ textarea:focus
 
 .notice__form
 {
+    position: relative;
+
     display: flex;
 
     width: 100%;

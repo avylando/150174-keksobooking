@@ -37,14 +37,13 @@
 
   // DOM-elements
   var form = document.querySelector('.notice__form');
+  var inputAddress = form.querySelector('#address');
   var selectTimeIn = form.querySelector('#timein');
   var selectTimeOut = form.querySelector('#timeout');
   var inputTypeHouse = form.querySelector('#type');
   var inputPrice = form.querySelector('#price');
   var inputRoomsNumber = form.querySelector('#room_number');
-  var roomsNumberOptions = inputRoomsNumber.options;
   var inputCapacity = form.querySelector('#capacity');
-  var capacityOptions = Array.from(inputCapacity.options);
 
   // Variables
   var timeInValues = window.utils.getOptionValuesInSelect(selectTimeIn);
@@ -71,98 +70,45 @@
   window.synchronizeFields(inputTypeHouse, inputPrice, houseTypes, MIN_PRICES, setMinValue);
 
 
-  // // Sync room number and capacity
-
-  // var disableSelectOptions = function (roomsOption, arrGuests) {
-  //   arrGuests.forEach(function (it) {
-  //     if (it.value > roomsOption.value) {
-  //       it.setAttribute('disabled', true);
-  //     } else if ((it.value <= roomsOption.value) && (roomsOption.value !== MAX_ROOMS_OPTION) && (it.value !== NULL_CAPACITY)) {
-  //       it.removeAttribute('disabled');
-  //     } else if (it.value === NULL_CAPACITY && roomsOption.value !== MAX_ROOMS_OPTION) {
-  //       it.setAttribute('disabled', true);
-  //     } else if (it.value === NULL_CAPACITY && roomsOption.value === MAX_ROOMS_OPTION) {
-  //       it.removeAttribute('disabled');
-  //     } else if (it.value !== NULL_CAPACITY && roomsOption.value === MAX_ROOMS_OPTION) {
-  //       it.setAttribute('disabled', true);
-  //     }
-  //   });
-  // };
-
-  // var roomCapacityChangeHandler = function () {
-  //   for (var i = 0; i < roomsNumberOptions.length; i++) {
-  //     if (inputRoomsNumber.value === roomsNumberOptions[i].value && roomsNumberOptions[i].value !== MAX_ROOMS_OPTION) {
-  //       inputCapacity.value = roomsNumberOptions[i].value;
-  //       disableSelectOptions(roomsNumberOptions[i], capacityOptions);
-  //     } else if (inputRoomsNumber.value === roomsNumberOptions[i].value && roomsNumberOptions[i].value === MAX_ROOMS_OPTION) {
-  //       inputCapacity.value = NULL_CAPACITY;
-  //       disableSelectOptions(roomsNumberOptions[i], capacityOptions);
-  //     }
-  //   }
-  // };
-
   // Set default capacity value
-  capacityOptions.forEach(function (option) {
-    option.setAttribute((option.value === DEFAULT_CAPACITY ? 'selected' : 'disabled'), true);
-  });
+  inputCapacity.value = DEFAULT_CAPACITY;
 
-  // inputRoomsNumber.addEventListener('change', roomCapacityChangeHandler);
+  // Validation capacity
 
+  var validateCapacity = function () {
+    var capacitySelected = inputCapacity.selectedIndex;
+    var roomsSelected = inputRoomsNumber.value;
+    var allowedValues = RoomsCapacity[roomsSelected].allowed;
 
-
-  //
-
-  var forEach = function (arr, cb) {
-    for (var i = 0; i < arr.length; i++) {
-      cb(arr[i]);
-    }
-  };
-
-  var disableOption = function (option) {
-    option.disabled = true;
-  };
-
-  var enableOptions = function (select) {
-    return function (option) {
-      select[option].disabled = false;
-    };
-  };
-
-  var active = [];
-  var syncCapacity = function (evt) {
-    var currentRooms = evt.target.value;
-    var allowed = RoomsCapacity[currentRooms].allowed;
-
-    forEach(active, disableOption);
-    forEach(allowed, enableOptions(inputCapacity));
-    active = active.slice(0, 0);
-    allowed.map(function (it) {
-      return active.push(inputCapacity[it]);
+    var validValue = allowedValues.some(function (value) {
+      return capacitySelected === value;
     });
 
-    inputCapacity.value = RoomsCapacity[currentRooms].default;
-  };
-
-  var validateCapacity = function (evt) {
-    var capacity = evt.target.selectedIndex;
-    var rooms = inputRoomsNumber.value;
-    var allowed = RoomsCapacity[rooms].allowed;
-    var valid = !!~allowed.indexOf(capacity);
-    var validity = valid ? '' : 'не подходит';
+    var validity = validValue ? '' : 'Значение указано неверно';
     inputCapacity.setCustomValidity(validity);
     inputCapacity.reportValidity();
   };
 
-  inputRoomsNumber.addEventListener('change', syncCapacity);
-  // inputCapacity.addEventListener('change', validateCapacity);
-  //
+  inputCapacity.addEventListener('change', validateCapacity);
 
+  // Sync rooms and capacity
+
+  var syncCapacity = function (evt) {
+    var currentRooms = evt.target.value;
+    inputCapacity.value = RoomsCapacity[currentRooms].default;
+    validateCapacity();
+  };
+
+  inputRoomsNumber.addEventListener('change', syncCapacity);
 
 
   // Submit functions
 
   var submitSuccess = function () {
+    var currentAddressValue = inputAddress.value;
     form.reset();
+    inputCapacity.value = DEFAULT_CAPACITY;
+    inputAddress.value = currentAddressValue;
   };
 
   var submitError = function (errorMessage) {
@@ -170,7 +116,6 @@
     errorPopup.classList.add('error-popup');
     errorPopup.classList.add('error-popup--form');
     errorPopup.textContent = errorMessage;
-    form.style.position = 'relative';
     form.insertAdjacentElement('beforeEnd', errorPopup);
     window.utils.setPopupTimeout(errorPopup, FORM_POPUP_TIMEOUT_INTERVAL);
   };
@@ -178,7 +123,6 @@
   // Add submit listener
 
   form.addEventListener('submit', function (evt) {
-    validateCapacity(evt);
     var formData = new FormData(form);
     window.backend.save(formData, submitSuccess, submitError);
     evt.preventDefault();

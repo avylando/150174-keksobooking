@@ -36,7 +36,7 @@
       var pin = window.pin.generate(it);
       var card = window.card.generate(it);
 
-      window.addPinListener(pin, card);
+      window.addShowCardHandler(pin, card);
 
       pinsFragment.appendChild(pin);
       cardsFragment.appendChild(card);
@@ -58,7 +58,6 @@
     errorPopup.classList.add('error-popup');
     errorPopup.classList.add('error-popup--data');
     errorPopup.textContent = errorMessage;
-    document.body.style.position = 'relative';
     document.body.insertAdjacentElement('afterBegin', errorPopup);
     window.utils.setPopupTimeout(errorPopup, POPUP_TIMEOUT_INTERVAL);
   };

@@ -4,7 +4,7 @@
 
   // Function show/hide card
 
-  window.addPinListener = function (button, card) {
+  window.addShowCardHandler = function (button, card) {
 
     // Variables
 
