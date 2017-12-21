@@ -16,7 +16,6 @@
 
   var checkFileValidity = function (file, fileTypes) {
     var fileName = file.name.toLowerCase();
-
     var fileTypeValidity = fileTypes.some(function (type) {
       return fileName.endsWith(type);
     });
@@ -24,26 +23,23 @@
     return fileTypeValidity;
   };
 
-  var renderImageInTemplate = function (image, template) {
+  var readImageFile = function (image, container, callback) {
     var reader = new FileReader();
-
     reader.addEventListener('load', function () {
-      template.src = reader.result;
+      callback(reader, container);
     });
-
     reader.readAsDataURL(image);
   };
 
-  var renderImageInContainer = function (image, container) {
-    var reader = new FileReader();
-    reader.addEventListener('load', function () {
-      var photo = document.createElement('img');
-      photo.src = reader.result;
-      photo.classList.add('photo');
-      container.appendChild(photo);
-    });
+  var setImageSrc = function (fileReader, container) {
+    container.src = fileReader.result;
+  };
 
-    reader.readAsDataURL(image);
+  var createImageInContainer = function (fileReader, container) {
+    var photo = document.createElement('img');
+    photo.src = fileReader.result;
+    photo.classList.add('photo');
+    container.appendChild(photo);
   };
 
 
@@ -53,7 +49,7 @@
     var avatar = uploadAvatarInput.files[0];
 
     if (checkFileValidity(avatar, FILE_TYPES)) {
-      renderImageInTemplate(avatar, avatarPreview);
+      readImageFile(avatar, avatarPreview, setImageSrc);
     }
   });
 
@@ -64,7 +60,7 @@
     var file = uploadPhotosInput.files[0];
 
     if (checkFileValidity(file, FILE_TYPES)) {
-      renderImageInContainer(file, photoContainer);
+      readImageFile(file, photoContainer, createImageInContainer);
     }
   });
 

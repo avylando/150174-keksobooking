@@ -5,7 +5,6 @@
 
   // Constants
   var MIN_PRICES = ['1000', '0', '5000', '10000'];
-  var DEFAULT_PRICE = '1000';
   var FORM_POPUP_TIMEOUT_INTERVAL = 3000;
 
   var Capacity = {
@@ -56,10 +55,6 @@
     elem.value = val;
   };
   window.synchronizeFields(selectTimeIn, selectTimeOut, timeInValues, timeOutValues, setValue);
-
-
-  // Set default min attribute
-  inputPrice.setAttribute('min', DEFAULT_PRICE);
 
   // Sync house type and price
 

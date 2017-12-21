@@ -24,15 +24,14 @@
   // Variables
   var similarAds = [];
 
-  //
 
   var fillMap = function (array) {
     var pinsFragment = document.createDocumentFragment();
     var cardsFragment = document.createDocumentFragment();
 
-    array.slice(0, MAX_ADS).forEach(function (it) {
-      var pin = window.pin.generate(it);
-      var card = window.card.generate(it);
+    array.slice(0, MAX_ADS).forEach(function (ad) {
+      var pin = window.pin.generate(ad);
+      var card = window.card.generate(ad);
 
       window.addShowCardHandler(pin, card);
 
@@ -70,8 +69,8 @@
       return inputChecked.value;
     });
 
-    var checkFeatureInAd = function (it) {
-      return adFeatures.indexOf(it) !== -1;
+    var checkFeatureInAd = function (feature) {
+      return adFeatures.indexOf(feature) !== -1;
     };
 
     return checkedFeaturesValues.every(checkFeatureInAd);

@@ -15,14 +15,14 @@
   // Get position
 
   var getPinPositionX = function (houseX, width) {
-    return (houseX - width) + 'px';
+    return (houseX - width) + 'px'; // Compensation transform: translateX -50%
   };
 
   var getPinPositionY = function (houseY, height) {
-    return (houseY - (height / 2)) + 'px';
+    return (houseY - (height / 2)) + 'px'; // Compensation transform: translateY -50%
   };
 
-  // Export values
+  // Export
 
   window.pin = {
     width: PIN_WIDTH,

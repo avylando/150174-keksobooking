@@ -11,7 +11,7 @@
 
     setPopupTimeout: function (popup, interval) {
       setTimeout(function () {
-        popup.style.display = 'none';
+        popup.remove();
       }, interval);
     },
 
@@ -20,8 +20,8 @@
     },
 
     removeElementsAttribute: function (array, attribute) {
-      array.forEach(function (it) {
-        it.removeAttribute(attribute);
+      array.forEach(function (item) {
+        item.removeAttribute(attribute);
       });
     },
 

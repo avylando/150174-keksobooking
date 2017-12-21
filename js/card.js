@@ -45,9 +45,9 @@
   var createPhotosList = function (array) {
 
     var photosFragment = document.createDocumentFragment();
-    array.forEach(function (it) {
+    array.forEach(function (imageSrc) {
       var image = document.createElement('img');
-      image.src = it;
+      image.src = imageSrc;
       image.style.width = IMAGE_WIDTH;
       image.style.height = IMAGE_HEIGHT;
       photosFragment.appendChild(image);
@@ -57,7 +57,7 @@
   };
 
 
-  // Export values
+  // Export
 
   window.card = {
     generate: function (obj) {
