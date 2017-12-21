@@ -7,6 +7,8 @@
   var MAX_ADS = 5;
   var LOW_PRICE = 10000;
   var HIGH_PRICE = 50000;
+  var POPUP_TIMEOUT_INTERVAL = 5000;
+  var DEBOUNCE_TIMEOUT_INTERVAL = 500;
 
   // DOM-elements
   var map = document.querySelector('.map');
@@ -21,59 +23,44 @@
 
   // Variables
   var similarAds = [];
-  var timeoutInterval = 500;
 
-  // Load users ads
 
-  var loadDataFromServer = function (data) {
-    similarAds = data;
+  var fillMap = function (array) {
+    var pinsFragment = document.createDocumentFragment();
+    var cardsFragment = document.createDocumentFragment();
+
+    array.slice(0, MAX_ADS).forEach(function (ad) {
+      var pin = window.pin.generate(ad);
+      var card = window.card.generate(ad);
+
+      window.addShowCardHandler(pin, card);
+
+      pinsFragment.appendChild(pin);
+      cardsFragment.appendChild(card);
+    });
+
+    pinsMap.appendChild(pinsFragment);
+    map.insertBefore(cardsFragment, filtersContainer);
   };
-
-  var loadError = function (errorMessage) {
-    var errorPopup = document.createElement('div');
-
-    // Element position
-    errorPopup.style.position = 'absolute';
-    errorPopup.style.right = '20px';
-    errorPopup.style.top = '20px';
-    errorPopup.style.zIndex = '200';
-    // Element sizes
-    errorPopup.style.boxSizing = 'border-box';
-    errorPopup.style.width = '220px';
-    errorPopup.style.padding = '10px';
-    // Element text style
-    errorPopup.style.fontSize = '14px';
-    errorPopup.style.color = '#ffffff';
-    errorPopup.style.textAlign = 'center';
-    // Element style
-    errorPopup.style.backgroundColor = 'rgba(255, 109, 81, 0.7)';
-    errorPopup.style.borderRadius = '10px';
-
-    errorPopup.textContent = errorMessage;
-    document.body.style.position = 'relative';
-    document.body.insertAdjacentElement('afterBegin', errorPopup);
-  };
-
-  window.backend.load(loadDataFromServer, loadError);
 
 
   // Set filters
 
-  var checkPriceRange = function (element) {
+  var checkPriceRange = function (ad) {
     switch (housePriceFilter.value) {
       case 'low':
-        return element.offer.price < LOW_PRICE;
+        return ad.offer.price < LOW_PRICE;
       case 'middle':
-        return element.offer.price >= LOW_PRICE && element.offer.price <= HIGH_PRICE;
+        return ad.offer.price >= LOW_PRICE && ad.offer.price <= HIGH_PRICE;
       case 'high':
-        return element.offer.price > HIGH_PRICE;
+        return ad.offer.price > HIGH_PRICE;
       case 'any':
-        return element;
+        return ad;
     }
     return false;
   };
 
-  var checkFeatureOptions = function (element) {
+  var checkFeatureOptions = function (adFeatures) {
     var checkedFeatures = features.filter(function (input) {
       return input.checked;
     });
@@ -82,67 +69,62 @@
       return inputChecked.value;
     });
 
-    var isContain = function (it) {
-      return element.indexOf(it) !== -1;
+    var checkFeatureInAd = function (feature) {
+      return adFeatures.indexOf(feature) !== -1;
     };
 
-    return checkedFeatures === 'undefined' || checkedFeaturesValues.every(isContain);
+    return checkedFeaturesValues.every(checkFeatureInAd);
   };
 
 
-  var filterByValues = function (element) {
-    return (houseTypeFilter.value === 'any' || element.offer.type === houseTypeFilter.value)
-      && checkPriceRange(element)
-      && (roomsNumberFilter.value === 'any' || element.offer.rooms === parseInt(roomsNumberFilter.value, 10))
-      && (guestsNumberFilter.value === 'any' || element.offer.guests === parseInt(guestsNumberFilter.value, 10))
-      && checkFeatureOptions(element.offer.features);
+  var filterByValues = function (ad) {
+    return (houseTypeFilter.value === 'any' || ad.offer.type === houseTypeFilter.value)
+      && checkPriceRange(ad)
+      && (roomsNumberFilter.value === 'any' || ad.offer.rooms === parseInt(roomsNumberFilter.value, 10))
+      && (guestsNumberFilter.value === 'any' || ad.offer.guests === parseInt(guestsNumberFilter.value, 10))
+      && checkFeatureOptions(ad.offer.features);
   };
 
   var clearMap = function () {
-    var userPins = document.querySelectorAll('.map__pin--user');
+    var userPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     var userCards = document.querySelectorAll('.popup');
 
-    for (var i = 0; i < userPins.length; i++) {
-      var pin = userPins[i];
-      var card = userCards[i];
+    userPins.forEach(function (pin) {
+      pin.remove();
+    });
 
-      pinsMap.removeChild(pin);
-      map.removeChild(card);
-    }
+    userCards.forEach(function (card) {
+      card.remove();
+    });
   };
 
   var updateMap = function () {
     clearMap();
     var filteredAds = similarAds.filter(filterByValues);
-    window.data.fillMap(filteredAds);
+    fillMap(filteredAds);
   };
 
   // Add debounce
 
-  var filtersChangeHandler = window.debounce(updateMap, timeoutInterval);
-
+  var filtersChangeHandler = window.debounce(updateMap, DEBOUNCE_TIMEOUT_INTERVAL);
   filtersContainer.addEventListener('change', filtersChangeHandler);
 
-
-  // Export values
+  // Export
 
   window.data = {
-    fillMap: function (array) {
-      array = array || similarAds;
-      array = array.slice(0, MAX_ADS);
+    loadSuccess: function (data) {
+      similarAds = data;
+      fillMap(similarAds);
+    },
 
-      for (var i = 0; i < array.length; i++) {
-        var pin = window.pin.generate(array[i]);
-        var card = window.card.generate(array[i]);
+    loadError: function (errorMessage) {
+      var errorPopup = document.createElement('div');
 
-        window.utils.setUserId(pin, i + 1);
-        window.utils.setUserId(card, i + 1);
-
-        window.showCard(pin, card);
-
-        pinsMap.appendChild(pin);
-        map.insertBefore(card, filtersContainer);
-      }
+      errorPopup.classList.add('error-popup');
+      errorPopup.classList.add('error-popup--data');
+      errorPopup.textContent = errorMessage;
+      document.body.insertAdjacentElement('afterBegin', errorPopup);
+      window.utils.setPopupTimeout(errorPopup, POPUP_TIMEOUT_INTERVAL);
     }
   };
 

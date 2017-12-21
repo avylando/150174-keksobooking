@@ -15,26 +15,25 @@
   // Get position
 
   var getPinPositionX = function (houseX, width) {
-    return (houseX - (width / 2)) + 'px';
+    return (houseX - width) + 'px'; // Compensation transform: translateX -50%
   };
 
   var getPinPositionY = function (houseY, height) {
-    return (houseY - height) + 'px';
+    return (houseY - (height / 2)) + 'px'; // Compensation transform: translateY -50%
   };
 
-  // Export values
+  // Export
 
   window.pin = {
     width: PIN_WIDTH,
     height: PIN_HEIGHT,
     generate: function (obj) {
-      var pinElement = mapPinTemplate.cloneNode(true);
-      pinElement.querySelector('img').src = obj.author.avatar;
-      pinElement.style.left = getPinPositionX(obj.location.x, PIN_WIDTH);
-      pinElement.style.top = getPinPositionY(obj.location.y, PIN_HEIGHT);
-      pinElement.classList.add('map__pin--user');
+      var pinClone = mapPinTemplate.cloneNode(true);
+      pinClone.querySelector('img').src = obj.author.avatar;
+      pinClone.style.left = getPinPositionX(obj.location.x, PIN_WIDTH);
+      pinClone.style.top = getPinPositionY(obj.location.y, PIN_HEIGHT);
 
-      return pinElement;
+      return pinClone;
     }
   };
 
