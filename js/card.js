@@ -27,10 +27,24 @@
     'palace': 'Дворец'
   };
 
-  // Useful functions
+  // Card constructor
 
-  var createFeaturesList = function (array) {
+  var Card = function (obj) {
+    this.element = mapCardTemplate.cloneNode(true);
+    this.element.querySelector('.popup__avatar').src = obj.author.avatar;
+    this.element.querySelector('h3').textContent = obj.offer.title;
+    this.element.querySelector('p small').textContent = obj.offer.adress;
+    this.element.querySelector('.popup__price').innerHTML = obj.offer.price + '&#x20bd;/ночь';
+    this.element.querySelector('h4').textContent = houseTypes[obj.offer.type] || 'Не указан';
+    this.element.querySelector('h4 + p').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
+    this.element.querySelector('h4 + p + p').textContent = 'Заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
+    this.element.querySelector('.popup__features').appendChild(this.createFeaturesList(obj.offer.features));
+    this.element.querySelector('.popup__features + p').textContent = obj.offer.description;
+    this.element.querySelector('.popup__pictures').appendChild(this.createPhotosList(obj.offer.photos));
+    this.element.classList.add('hidden');
+  };
 
+  Card.prototype.createFeaturesList = function (array) {
     var featuresFragment = document.createDocumentFragment();
     array.forEach(function (featureName) {
       var featureElement = document.createElement('li');
@@ -42,8 +56,7 @@
     return featuresFragment;
   };
 
-  var createPhotosList = function (array) {
-
+  Card.prototype.createPhotosList = function (array) {
     var photosFragment = document.createDocumentFragment();
     array.forEach(function (imageSrc) {
       var image = document.createElement('img');
@@ -56,26 +69,13 @@
     return photosFragment;
   };
 
-
   // Export
 
   window.card = {
     generate: function (obj) {
-      var cardClone = mapCardTemplate.cloneNode(true);
+      var card = new Card(obj);
 
-      cardClone.querySelector('.popup__avatar').src = obj.author.avatar;
-      cardClone.querySelector('h3').textContent = obj.offer.title;
-      cardClone.querySelector('p small').textContent = obj.offer.adress;
-      cardClone.querySelector('.popup__price').innerHTML = obj.offer.price + '&#x20bd;/ночь';
-      cardClone.querySelector('h4').textContent = houseTypes[obj.offer.type] || 'Не указан';
-      cardClone.querySelector('h4 + p').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
-      cardClone.querySelector('h4 + p + p').textContent = 'Заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
-      cardClone.querySelector('.popup__features').appendChild(createFeaturesList(obj.offer.features));
-      cardClone.querySelector('.popup__features + p').textContent = obj.offer.description;
-      cardClone.querySelector('.popup__pictures').appendChild(createPhotosList(obj.offer.photos));
-      cardClone.classList.add('hidden');
-
-      return cardClone;
+      return card;
     }
   };
 })();

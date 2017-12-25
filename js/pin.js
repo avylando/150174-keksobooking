@@ -12,14 +12,19 @@
   var template = document.querySelector('template').content;
   var mapPinTemplate = template.querySelector('.map__pin');
 
-  // Get position
+  // Pin constructor
 
-  var getPinPositionX = function (houseX, width) {
-    return (houseX - width) + 'px'; // Compensation transform: translateX -50%
+  var Pin = function (obj) {
+    this.element = mapPinTemplate.cloneNode(true);
+    this.element.querySelector('img').src = obj.author.avatar;
   };
 
-  var getPinPositionY = function (houseY, height) {
-    return (houseY - (height / 2)) + 'px'; // Compensation transform: translateY -50%
+  Pin.prototype.getPositionX = function (xCoord, width) {
+    return (xCoord - width) + 'px';
+  };
+
+  Pin.prototype.getPositionY = function (yCoord, height) {
+    return (yCoord - (height / 2)) + 'px';
   };
 
   // Export
@@ -28,12 +33,11 @@
     width: PIN_WIDTH,
     height: PIN_HEIGHT,
     generate: function (obj) {
-      var pinClone = mapPinTemplate.cloneNode(true);
-      pinClone.querySelector('img').src = obj.author.avatar;
-      pinClone.style.left = getPinPositionX(obj.location.x, PIN_WIDTH);
-      pinClone.style.top = getPinPositionY(obj.location.y, PIN_HEIGHT);
+      var pin = new Pin(obj);
+      pin.element.style.left = pin.getPositionX(obj.location.x, PIN_WIDTH);
+      pin.element.style.top = pin.getPositionY(obj.location.y, PIN_HEIGHT);
 
-      return pinClone;
+      return pin;
     }
   };
 

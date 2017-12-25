@@ -33,10 +33,10 @@
       var pin = window.pin.generate(ad);
       var card = window.card.generate(ad);
 
-      window.addShowCardHandler(pin, card);
+      window.addShowCardHandler(pin.element, card.element);
 
-      pinsFragment.appendChild(pin);
-      cardsFragment.appendChild(card);
+      pinsFragment.appendChild(pin.element);
+      cardsFragment.appendChild(card.element);
     });
 
     pinsMap.appendChild(pinsFragment);
