@@ -31,16 +31,16 @@
 
   var Card = function (obj) {
     this.element = mapCardTemplate.cloneNode(true);
-    this.element.querySelector('.popup__avatar').src = obj.author.avatar;
-    this.element.querySelector('h3').textContent = obj.offer.title;
-    this.element.querySelector('p small').textContent = obj.offer.adress;
-    this.element.querySelector('.popup__price').innerHTML = obj.offer.price + '&#x20bd;/ночь';
-    this.element.querySelector('h4').textContent = houseTypes[obj.offer.type] || 'Не указан';
-    this.element.querySelector('h4 + p').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
-    this.element.querySelector('h4 + p + p').textContent = 'Заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
-    this.element.querySelector('.popup__features').appendChild(this.createFeaturesList(obj.offer.features));
-    this.element.querySelector('.popup__features + p').textContent = obj.offer.description;
-    this.element.querySelector('.popup__pictures').appendChild(this.createPhotosList(obj.offer.photos));
+    this.element.querySelector('.popup__avatar').src = obj.avatar;
+    this.element.querySelector('h3').textContent = obj.title;
+    this.element.querySelector('p small').textContent = obj.adress;
+    this.element.querySelector('.popup__price').innerHTML = obj.price + '&#x20bd;/ночь';
+    this.element.querySelector('h4').textContent = houseTypes[obj.type] || 'Не указан';
+    this.element.querySelector('h4 + p').textContent = obj.rooms + ' комнаты для ' + obj.guests + ' гостей';
+    this.element.querySelector('h4 + p + p').textContent = 'Заезд после ' + obj.checkin + ', выезд до ' + obj.checkout;
+    this.element.querySelector('.popup__features').appendChild(this.createFeaturesList(obj.features));
+    this.element.querySelector('.popup__features + p').textContent = obj.description;
+    this.element.querySelector('.popup__pictures').appendChild(this.createPhotosList(obj.photos));
     this.element.classList.add('hidden');
   };
 

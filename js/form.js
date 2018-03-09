@@ -111,10 +111,10 @@
 
   // Add submit listener
 
-  form.addEventListener('submit', function (evt) {
-    var formData = new FormData(form);
-    window.backend.save(formData, submitSuccess, submitError);
-    evt.preventDefault();
-  });
+  // form.addEventListener('submit', function (evt) {
+  //   var formData = new FormData(form);
+  //   window.backend.save(formData, submitSuccess, submitError);
+  //   evt.preventDefault();
+  // });
 
 })();

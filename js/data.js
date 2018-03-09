@@ -49,11 +49,11 @@
   var checkPriceRange = function (ad) {
     switch (housePriceFilter.value) {
       case 'low':
-        return ad.offer.price < LOW_PRICE;
+        return ad.price < LOW_PRICE;
       case 'middle':
-        return ad.offer.price >= LOW_PRICE && ad.offer.price <= HIGH_PRICE;
+        return ad.price >= LOW_PRICE && ad.price <= HIGH_PRICE;
       case 'high':
-        return ad.offer.price > HIGH_PRICE;
+        return ad.price > HIGH_PRICE;
       case 'any':
         return ad;
     }
@@ -78,11 +78,11 @@
 
 
   var filterByValues = function (ad) {
-    return (houseTypeFilter.value === 'any' || ad.offer.type === houseTypeFilter.value)
+    return (houseTypeFilter.value === 'any' || ad.type === houseTypeFilter.value)
       && checkPriceRange(ad)
-      && (roomsNumberFilter.value === 'any' || ad.offer.rooms === parseInt(roomsNumberFilter.value, 10))
-      && (guestsNumberFilter.value === 'any' || ad.offer.guests === parseInt(guestsNumberFilter.value, 10))
-      && checkFeatureOptions(ad.offer.features);
+      && (roomsNumberFilter.value === 'any' || parseInt(ad.rooms, 10) === parseInt(roomsNumberFilter.value, 10))
+      && (guestsNumberFilter.value === 'any' || parseInt(ad.guests, 10) === parseInt(guestsNumberFilter.value, 10))
+      && checkFeatureOptions(ad.features);
   };
 
   var clearMap = function () {

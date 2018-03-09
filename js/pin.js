@@ -6,6 +6,8 @@
   // Constants
   var PIN_WIDTH = 46;
   var PIN_HEIGHT = 64;
+  var X_CORR = 5;
+  var Y_CORR = 80;
 
   // Find pin template
 
@@ -16,15 +18,15 @@
 
   var Pin = function (obj) {
     this.element = mapPinTemplate.cloneNode(true);
-    this.element.querySelector('img').src = obj.author.avatar;
+    this.element.querySelector('img').src = obj.avatar;
   };
 
-  Pin.prototype.getPositionX = function (xCoord, width) {
-    return (xCoord - width) + 'px';
+  Pin.prototype.getPositionX = function (xCoord, xOffset) {
+    return (xCoord - xOffset) + 'px';
   };
 
-  Pin.prototype.getPositionY = function (yCoord, height) {
-    return (yCoord - (height / 2)) + 'px';
+  Pin.prototype.getPositionY = function (yCoord, yOffset) {
+    return (yCoord - yOffset) + 'px';
   };
 
   // Export
@@ -34,8 +36,8 @@
     height: PIN_HEIGHT,
     generate: function (obj) {
       var pin = new Pin(obj);
-      pin.element.style.left = pin.getPositionX(obj.location.x, PIN_WIDTH);
-      pin.element.style.top = pin.getPositionY(obj.location.y, PIN_HEIGHT);
+      pin.element.style.left = pin.getPositionX(obj.location_x, X_CORR);
+      pin.element.style.top = pin.getPositionY(obj.location_y, Y_CORR);
 
       return pin;
     }

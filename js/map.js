@@ -6,7 +6,8 @@
   // Constants
   var MIN_Y_COORD = 100;
   var MAX_Y_COORD = 500;
-  var MAIN_PIN_HEIGHT = 80;
+  var MAIN_PIN_WIDTH = 64;
+  var MAIN_PIN_HEIGHT = 87;
 
   // DOM-elements
   var map = document.querySelector('.map');

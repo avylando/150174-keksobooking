@@ -57,11 +57,13 @@
   // Photos upload
 
   uploadPhotosInput.addEventListener('change', function () {
-    var file = uploadPhotosInput.files[0];
+    var files = Array.from(uploadPhotosInput.files);
+    files.forEach(function (file) {
+      if (checkFileValidity(file, FILE_TYPES)) {
+        readImageFile(file, photoContainer, createImageInContainer);
+      }
+    });
 
-    if (checkFileValidity(file, FILE_TYPES)) {
-      readImageFile(file, photoContainer, createImageInContainer);
-    }
   });
 
 })();

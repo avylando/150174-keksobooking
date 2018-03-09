@@ -3,11 +3,12 @@
 (function () {
   window.backend = {
     load: function (onLoad, onError) {
-      var URL = 'https://1510.dump.academy/keksobooking/data';
-      var xhr = new XMLHttpRequest();
+      var URL = '/assets/getdata.php';
+      var  xhr = new XMLHttpRequest();
 
       xhr.responseType = 'json';
       xhr.addEventListener('load', function () {
+
         switch (xhr.status) {
           case 200:
             onLoad(xhr.response);
@@ -31,36 +32,37 @@
       });
 
       xhr.timeout = 10000;
-      xhr.open('GET', URL);
+      xhr.open("GET", URL, true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       xhr.send();
     },
 
-    save: function (data, onLoad, onError) {
-      var URL = 'https://1510.dump.academy/keksobooking';
-      var xhr = new XMLHttpRequest();
+    // save: function (data, onLoad, onError) {
+    //   var URL = '/assets/setdata.php';
+    //   var xhr = new XMLHttpRequest();
 
-      xhr.responseType = 'json';
-      xhr.addEventListener('load', function () {
-        switch (xhr.status) {
-          case 200: onLoad();
-            break;
+    //   // xhr.responseType = 'json';
+    //   xhr.addEventListener('load', function () {
+    //     switch (xhr.status) {
+    //       case 200: onLoad();
+    //         break;
 
-          default:
-            onError('Произошла ошибка: ' + xhr.status + ' ' + xhr.statusText);
-        }
-      });
+    //       default:
+    //         onError('Произошла ошибка: ' + xhr.status + ' ' + xhr.statusText);
+    //     }
+    //   });
 
-      xhr.addEventListener('error', function () {
-        onError('Ошибка соединения. Обновите страницу и повторите запрос');
-      });
+    //   xhr.addEventListener('error', function () {
+    //     onError('Ошибка соединения. Обновите страницу и повторите запрос');
+    //   });
 
-      xhr.addEventListener('timeout', function () {
-        onError('Истек таймаут соединения с сервером');
-      });
+    //   xhr.addEventListener('timeout', function () {
+    //     onError('Истек таймаут соединения с сервером');
+    //   });
 
-      xhr.timeout = 10000;
-      xhr.open('POST', URL);
-      xhr.send(data);
-    }
+    //   xhr.timeout = 10000;
+    //   xhr.open('POST', URL);
+    //   xhr.send(data);
+    // }
   };
 })();
