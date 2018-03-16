@@ -741,8 +741,8 @@ textarea:focus
 .form__photo-container .photo {
     width: 140px;
     height: 70px;
-    padding: 10px;
-    padding-top: 0;
+    padding-left: 10px;
+    padding-bottom: 10px;
     border-radius: 5px;
 }
 
