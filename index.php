@@ -34,15 +34,16 @@
       <form action="#" class="map__filters" autocomplete="off">
         <select name="housing-type" id="housing-type" class="map__filter">
           <option value="any" selected>Любой тип жилья</option>
+          <option value="bungalo">Лачуга</option>
           <option value="flat">Квартира</option>
           <option value="house">Дом</option>
-          <option value="bungalo">Сарай</option>
+          <option value="palace">Дворец</option>
         </select>
 
         <select name="housing-price" id="housing-price" class="map__filter">
           <option value="any" selected>Любая</option>
-          <option value="middle">10000 - 50000&#x20bd;</option>
           <option value="low">до 10000&#x20bd;</option>
+          <option value="middle">10000 - 50000&#x20bd;</option>
           <option value="high">от 50000&#x20bd;</option>
         </select>
 

@@ -2,16 +2,15 @@
 
 (function () {
   window.backend = {
-    load: function (onLoad, onError, parameter = '') {
-      var URL = '/assets/getdata.php' + parameter;
+    load: function (onLoad, onError) {
+      var URL = '/assets/getdata.php';
       var  xhr = new XMLHttpRequest();
-      console.log(URL);
+
       xhr.responseType = 'json';
       xhr.addEventListener('load', function () {
 
         switch (xhr.status) {
           case 200:
-          console.log(xhr);
             onLoad(xhr.response);
             break;
 

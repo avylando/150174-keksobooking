@@ -4,7 +4,7 @@
 (function () {
 
   // Constants
-  var MAX_ADS = 5;
+  // var MAX_ADS = 5;
   var LOW_PRICE = 10000;
   var HIGH_PRICE = 50000;
   var POPUP_TIMEOUT_INTERVAL = 5000;
@@ -24,12 +24,11 @@
   // Variables
   var similarAds = [];
 
-
   var fillMap = function (array) {
     var pinsFragment = document.createDocumentFragment();
     var cardsFragment = document.createDocumentFragment();
 
-    array.slice(0, MAX_ADS).forEach(function (ad) {
+    array.forEach(function (ad) {
       var pin = window.pin.generate(ad);
       var card = window.card.generate(ad);
 
@@ -43,24 +42,56 @@
     map.insertBefore(cardsFragment, filtersContainer);
   };
 
-
   // Set filters
 
-  var checkPriceRange = function (ad) {
-    switch (housePriceFilter.value) {
-      case 'low':
-        return ad.price < LOW_PRICE;
-      case 'middle':
-        return ad.price >= LOW_PRICE && ad.price <= HIGH_PRICE;
-      case 'high':
-        return ad.price > HIGH_PRICE;
-      case 'any':
-        return ad;
+  var checkHouseType = function () {
+
+    var houseTypeParams = {
+      bungalo: 'type=bungalo',
+      flat: 'type=flat',
+      house: 'type=house',
+      palace: 'type=palace',
+      any: null
     }
-    return false;
+
+    var params = houseTypeParams[houseTypeFilter.value];
+    return params;
   };
 
-  var checkFeatureOptions = function (adFeatures) {
+  var checkPriceRange = function (ad) {
+
+    switch (housePriceFilter.value) {
+      case 'low':
+        return 'price&to=10000';
+      case 'middle':
+        return 'price&from=10000&to=50000';
+      case 'high':
+        return 'price&from=50000';
+      case 'any':
+        return null;
+    }
+
+    return null;
+  };
+
+  var checkCapacity = function () {
+    if (roomsNumberFilter.value === 'any') {
+      return null;
+    }
+
+    return 'rooms=' + roomsNumberFilter.value;
+  }
+
+  var checkGuests = function () {
+    if (guestsNumberFilter.value === 'any') {
+      return null;
+    }
+
+    return 'guests=' + guestsNumberFilter.value;
+  }
+
+  var checkFeatureOptions = function () {
+    var params = null;
     var checkedFeatures = features.filter(function (input) {
       return input.checked;
     });
@@ -69,21 +100,29 @@
       return inputChecked.value;
     });
 
-    var checkFeatureInAd = function (feature) {
-      return adFeatures.indexOf(feature) !== -1;
-    };
+    if (checkedFeaturesValues.length > 0) {
+      params = 'features[]=' + checkedFeaturesValues.join('&features[]=');
+    }
 
-    return checkedFeaturesValues.every(checkFeatureInAd);
+    return params;
   };
 
+  var setFilterParams = function () {
+    var typeParams = checkHouseType();
+    var priceParams = checkPriceRange();
+    var roomsParams = checkCapacity();
+    var guestsParams = checkGuests();
+    var featureParams = checkFeatureOptions();
 
-  var filterByValues = function (ad) {
-    return (houseTypeFilter.value === 'any' || ad.type === houseTypeFilter.value)
-      && checkPriceRange(ad)
-      && (roomsNumberFilter.value === 'any' || parseInt(ad.rooms, 10) === parseInt(roomsNumberFilter.value, 10))
-      && (guestsNumberFilter.value === 'any' || parseInt(ad.guests, 10) === parseInt(guestsNumberFilter.value, 10))
-      && checkFeatureOptions(ad.features);
-  };
+    var array = [typeParams, priceParams, roomsParams, guestsParams, featureParams];
+    array = array.filter(function (el) {
+      return el !== null;
+    });
+
+    var params = '?filter&' + array.join('&');
+
+    window.backend.load(window.data.loadSuccess, window.data.loadError, params);
+  }
 
   var clearMap = function () {
     var userPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -98,10 +137,9 @@
     });
   };
 
-  var updateMap = function () {
+  var updateMap = function (data) {
     clearMap();
-    var filteredAds = similarAds.filter(filterByValues);
-    fillMap(filteredAds);
+    setFilterParams();
   };
 
   // Add debounce
@@ -113,8 +151,7 @@
 
   window.data = {
     loadSuccess: function (data) {
-      similarAds = data;
-      fillMap(similarAds);
+      fillMap(data);
     },
 
     loadError: function (errorMessage) {

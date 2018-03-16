@@ -2,8 +2,8 @@
 
 (function () {
   window.backend = {
-    load: function (onLoad, onError) {
-      var URL = '/assets/getdata.php';
+    load: function (onLoad, onError, parameter = '') {
+      var URL = '/assets/getdata.php' + parameter;
       var  xhr = new XMLHttpRequest();
 
       xhr.responseType = 'json';
@@ -11,6 +11,7 @@
 
         switch (xhr.status) {
           case 200:
+          console.log(xhr);
             onLoad(xhr.response);
             break;
 
