@@ -137,7 +137,7 @@
     });
   };
 
-  var updateMap = function (data) {
+  var updateMap = function () {
     clearMap();
     setFilterParams();
   };
@@ -162,6 +162,10 @@
       errorPopup.textContent = errorMessage;
       document.body.insertAdjacentElement('afterBegin', errorPopup);
       window.utils.setPopupTimeout(errorPopup, POPUP_TIMEOUT_INTERVAL);
+    },
+
+    update: function () {
+      updateMap();
     }
   };
 

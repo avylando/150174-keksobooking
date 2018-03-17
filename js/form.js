@@ -94,10 +94,30 @@
 
   // Submit functions
 
-  var submitSuccess = function () {
+  var resetFormToDefault = function () {
+    var avatarPreview = document.querySelector('#avatar-preview');
+    var uploadPhotos = Array.from(document.querySelectorAll('.form__photo-container .photo'));
+
+    if (avatarPreview.src !== 'img/muffin.png') {
+      avatarPreview.src = avatarPreview.getAttribute('data-default');
+    }
+
+    if (uploadPhotos) {
+      uploadPhotos.forEach(function (el) {
+        console.log(uploadPhotos);
+        el.remove();
+      });
+    }
+
     var currentAddressValue = inputAddress.value;
     form.reset();
     inputAddress.value = currentAddressValue;
+  };
+
+  var submitSuccess = function () {
+    resetFormToDefault();
+
+    window.data.update();
   };
 
   var submitError = function (errorMessage) {
@@ -109,12 +129,18 @@
     window.utils.setPopupTimeout(errorPopup, FORM_POPUP_TIMEOUT_INTERVAL);
   };
 
-  // Add submit listener
+  // Add listeners
 
-  // form.addEventListener('submit', function (evt) {
-  //   var formData = new FormData(form);
-  //   window.backend.save(formData, submitSuccess, submitError);
-  //   evt.preventDefault();
-  // });
+  form.addEventListener('submit', function (evt) {
+    var formData = new FormData(form);
+    window.backend.save(formData, submitSuccess, submitError);
+    evt.preventDefault();
+  });
+
+  var resetButton = document.querySelector('#reset-button');
+  resetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    resetFormToDefault();
+  });
 
 })();

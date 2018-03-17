@@ -38,32 +38,33 @@
       xhr.send();
     },
 
-    // save: function (data, onLoad, onError) {
-    //   var URL = '/assets/setdata.php';
-    //   var xhr = new XMLHttpRequest();
+    save: function (data, onLoad, onError) {
+      var URL = '/assets/setdata.php';
+      var xhr = new XMLHttpRequest();
 
-    //   // xhr.responseType = 'json';
-    //   xhr.addEventListener('load', function () {
-    //     switch (xhr.status) {
-    //       case 200: onLoad();
-    //         break;
+      // xhr.responseType = 'json';
+      xhr.addEventListener('load', function () {
+        switch (xhr.status) {
+          case 200: onLoad();
+            break;
 
-    //       default:
-    //         onError('Произошла ошибка: ' + xhr.status + ' ' + xhr.statusText);
-    //     }
-    //   });
+          default:
+            onError('Произошла ошибка: ' + xhr.status + ' ' + xhr.statusText);
+        }
+      });
 
-    //   xhr.addEventListener('error', function () {
-    //     onError('Ошибка соединения. Обновите страницу и повторите запрос');
-    //   });
+      xhr.addEventListener('error', function () {
+        onError('Ошибка соединения. Обновите страницу и повторите запрос');
+      });
 
-    //   xhr.addEventListener('timeout', function () {
-    //     onError('Истек таймаут соединения с сервером');
-    //   });
+      xhr.addEventListener('timeout', function () {
+        onError('Истек таймаут соединения с сервером');
+      });
 
-    //   xhr.timeout = 10000;
-    //   xhr.open('POST', URL);
-    //   xhr.send(data);
-    // }
+      xhr.timeout = 10000;
+      xhr.open('POST', URL);
+      xhr.setRequestHeader('accept', 'application/json');
+      xhr.send(data);
+    }
   };
 })();
