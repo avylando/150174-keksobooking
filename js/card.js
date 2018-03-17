@@ -36,7 +36,7 @@
     this.element.querySelector('p small').textContent = obj.adress;
     this.element.querySelector('.popup__price').innerHTML = obj.price + '&#x20bd;/ночь';
     this.element.querySelector('h4').textContent = houseTypes[obj.type] || 'Не указан';
-    this.element.querySelector('h4 + p').textContent = obj.rooms + ' комнаты для ' + obj.guests + ' гостей';
+    this.element.querySelector('h4 + p').textContent = obj.rooms + window.utils.setEndings(obj.rooms, [' комната ', ' комнаты ', ' комнат ']) + (parseInt(obj.guests, 10) === 0 ? 'не для гостей' : 'для ' + obj.guests + ' гостей');
     this.element.querySelector('h4 + p + p').textContent = 'Заезд после ' + obj.checkin + ', выезд до ' + obj.checkout;
     this.element.querySelector('.popup__features').appendChild(this.createFeaturesList(obj.features));
     this.element.querySelector('.popup__features + p').textContent = obj.description;

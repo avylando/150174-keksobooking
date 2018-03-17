@@ -104,7 +104,6 @@
 
     if (uploadPhotos) {
       uploadPhotos.forEach(function (el) {
-        console.log(uploadPhotos);
         el.remove();
       });
     }

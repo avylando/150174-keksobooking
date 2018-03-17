@@ -58,6 +58,8 @@
           <option value="any" selected>Любое число гостей</option>
           <option value="1">Один гость</option>
           <option value="2">Два гостя</option>
+          <option value="3">Три гостя</option>
+          <option value="0">Не для гостей</option>
         </select>
 
         <fieldset id="housing-features" class="map__filter-set features">
@@ -92,7 +94,7 @@
         <div class="notice__photo">
           <div class="upload">
             <div class="notice__preview">
-              <img src="img/muffin.png" alt="Аватар пользователя" width="40" height="44">
+              <img src="img/muffin.png" alt="Аватар пользователя" width="40" height="44" id="avatar-preview" data-default="img/muffin.png">
             </div>
             <input type="file" id="avatar" name='avatar' accept="image/*">
             <label class="drop-zone" for="avatar">Загрузите или&nbsp;перетащите сюда фото</label>
@@ -103,7 +105,7 @@
 
       <fieldset class="form__element form__element--wide" disabled>
         <label for="title">Заголовок объявления</label>
-        <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка в центре Токио" minlength="30" maxlength="100" required>
+        <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка в центре Токио" minlength="10" maxlength="100" required>
       </fieldset>
 
       <fieldset class="form__element form__element--wide" disabled>
@@ -199,7 +201,7 @@
 
       <fieldset class="form__element form__element--submit" disabled>
         <button class="form__submit" type="submit">Опубликовать</button>
-        или <button class="form__reset" type="reset">очистить</button>
+        или <button class="form__reset" type="reset" id="reset-button">очистить</button>
       </fieldset>
     </form>
   </div>

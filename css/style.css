@@ -339,6 +339,8 @@ textarea:focus
 
 .map__pin--main::after
 {
+    left: 50%;
+
     transition: transform 300ms ease-in;
     transform: translate(-50%, -6px);
 
